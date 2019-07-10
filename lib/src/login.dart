@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import './signup.dart';
-import './reset.dart';
+import './home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-
+final FirebaseAuth _auth = FirebaseAuth.instance;
+String email, passwaord;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -13,6 +15,7 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage> {
   final GlobalKey key1 = new GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -41,59 +44,13 @@ class LoginPageState extends State<LoginPage> {
                       letterSpacing: 3.0)),
               Form(
                 key: key1,
+
                 child: formUI(context, key1),
+
               ),
 
               Column(
                 children: <Widget>[
-                  Container(
-                    width: 100.0,
-                    margin: EdgeInsets.fromLTRB(0.0, 40.0, 0.0, 5.0),
-                    child: Text(
-                      "OR WITH",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 14.0),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        width: 120.0,
-                        height: 45.0,
-                        margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                        child: RaisedButton(
-                          color: Colors.white,
-                          padding: EdgeInsets.all(10.0),
-                          onPressed: () {},
-                          child: Text(
-                            "FACEBOOK",
-                            style: TextStyle(
-                                color: Colors.blueAccent,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 45.0,
-                        width: 120.0,
-                        margin: EdgeInsets.fromLTRB(30.0, 5.0, 0.0, 0.0),
-                        child: RaisedButton(
-                          color: Colors.white,
-                          padding: EdgeInsets.all(10.0),
-                          onPressed: (){},
-                          child: Text(
-                            "GOOGLE",
-                            style: TextStyle(
-                                color: Colors.redAccent,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                   Container(
                     width: 200.0,
                     margin: EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),
@@ -120,10 +77,10 @@ class LoginPageState extends State<LoginPage> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => SignupPage()),
+                          MaterialPageRoute(builder: (context) => Register()),
                         );
                       },
-                    ),
+                    ), 
                   ),
                   Container(
                     margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
@@ -147,13 +104,7 @@ class LoginPageState extends State<LoginPage> {
                               color: Colors.blueAccent,
                               letterSpacing: 1.0),
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ResetPage()),
-                          );
-                        },
+                        onPressed: () {},
                       ))
                 ],
               )
@@ -161,14 +112,14 @@ class LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+
     );
   }
 
-}
-
 // Create a Form widget
 Widget formUI(context, key) {
-  String email, password;
+  final TextEditingController email = TextEditingController();
+   final TextEditingController password = TextEditingController();
   return Column(
     children: <Widget>[
       Container(
@@ -199,9 +150,7 @@ Widget formUI(context, key) {
                   fontSize: 10.0,
                 )),
             validator: validateEmail,
-            onSaved: (String val) {
-              email = val;
-            },
+            controller: email,
           ),
         ),
       ),
@@ -229,9 +178,7 @@ Widget formUI(context, key) {
                 hintText: "...........",
                 hintStyle: TextStyle(color: Colors.grey, fontSize: 20.0)),
             validator: validatePassword,
-            onSaved: (String val) {
-              password = val;
-            },
+            controller: password,
           ),
         ),
       ),
@@ -242,21 +189,44 @@ Widget formUI(context, key) {
         child: RaisedButton(
           color: Colors.purple,
           padding: EdgeInsets.all(10.0),
-          onPressed: () {},
+          onPressed: () 
+          {
+            if (key.currentState.validate()) {
+              signInUser(context,email.text, password.text);
+            
+            }
+          },
           child: Text(
-            "Login",
+            "Sign In",
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold),
           ),
         ),
+
       ),
+
     ],
   );
 }
 
-
+Future<FirebaseUser> signInUser(context, String email, String password) async {
+  FirebaseUser user = await _auth
+      .signInWithEmailAndPassword(
+          email:email, password: password)
+      .then((user) {
+         Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
+    print(user.email);
+  }).catchError((err){
+    _showAlert(context);
+    print(err);
+  });
+  return user;
+}
 
 String validateEmail(String value) {
   String pattern =
@@ -279,4 +249,25 @@ String validatePassword(var value) {
   } else {
     return null;
   }
+}
+
+Future<void> _showAlert(BuildContext context) {
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Warning'),
+        content: const Text('Email or Password is incorrect'),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Ok'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
 }

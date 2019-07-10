@@ -49,7 +49,13 @@ class HomePageState extends State<HomePage> {
                   color: Colors.purple,
                 ),
                 title: Text("Home"),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomePage()),
+                  );
+                },
               ),
               ListTile(
                 leading: Icon(
@@ -102,7 +108,13 @@ class HomePageState extends State<HomePage> {
                   children: <Widget>[
                     Container(
                       child: FlatButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()),
+                            );
+                          },
                           child: Text(
                             "Home",
                             style:
