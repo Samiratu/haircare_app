@@ -3,10 +3,15 @@ import './service.dart';
 import './home.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path/path.dart';
 import 'dart:io';
+import './crud.dart';
+
+
 
 class StylistPage extends StatefulWidget {
+
   @override
   createState() {
     return StylistPageState();
@@ -14,9 +19,14 @@ class StylistPage extends StatefulWidget {
 }
 
 class StylistPageState extends State<StylistPage> {
+  CRUDMethods crudObj = new CRUDMethods();
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
   File _imageFile;
   String _downloadUrl;
-  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
+  String stylistName;
+  String stylistCategory;
+  String stylistContact;
+  QuerySnapshot stylists;
 
   Future getImage() async {
     File image;
@@ -49,63 +59,22 @@ class StylistPageState extends State<StylistPage> {
   }
 
   @override
+  void initState(){
+    setState(() {
+      crudObj.getData().then((results){
+       stylists = results;
+      });
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         key: _scaffoldKey,
-        drawer: Drawer(
-          elevation: 200.0,
-          child: ListView(
-            children: <Widget>[
-              UserAccountsDrawerHeader(
-                accountName: Text('Hammad Nadia'),
-                accountEmail: Text('nadia.com@gmail.com'),
-                currentAccountPicture: Image.asset('images/profile.jpg'),
-                decoration: BoxDecoration(
-                  color: Colors.purple,
-                ),
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.calendar_view_day,
-                  color: Colors.purple,
-                ),
-                title: Text("My Bookings"),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.shop,
-                  color: Colors.purple,
-                ),
-                title: Text("Buy hair products"),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.home,
-                  color: Colors.purple,
-                ),
-                title: Text("Home"),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.info,
-                  color: Colors.purple,
-                ),
-                title: Text("About"),
-                onTap: () {},
-              ),
-            ],
-          ),
-        ),
+        drawer: appDrawer(context),
         appBar: AppBar(
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -387,3 +356,5 @@ class StylistPageState extends State<StylistPage> {
     );
   }
 }
+
+

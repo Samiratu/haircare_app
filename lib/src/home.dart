@@ -15,59 +15,7 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return  Scaffold(
         key: _scaffoldKey,
-        drawer: Drawer(
-          elevation: 200.0,
-          child: ListView(
-            children: <Widget>[
-              UserAccountsDrawerHeader(
-                accountName: Text('Hammad Nadia'),
-                accountEmail: Text('nadia.com@gmail.com'),
-                currentAccountPicture: Image.asset('images/profile.jpg'),
-                decoration: BoxDecoration(
-                  color: Colors.purple,
-                ),
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.calendar_view_day,
-                  color: Colors.purple,
-                ),
-                title: Text("My Bookings"),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.shop,
-                  color: Colors.purple,
-                ),
-                title: Text("Buy hair products"),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.home,
-                  color: Colors.purple,
-                ),
-                title: Text("Home"),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HomePage()),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.info,
-                  color: Colors.purple,
-                ),
-                title: Text("About"),
-                onTap: () {},
-              ),
-            ],
-          ),
-        ),
+        drawer: appDrawer(context),
         appBar: AppBar(
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -380,4 +328,60 @@ class HomePageState extends State<HomePage> {
       
     );
   }
+}
+
+Widget appDrawer(context){
+  return Drawer(
+    elevation: 200.0,
+    child: ListView(
+      children: <Widget>[
+        UserAccountsDrawerHeader(
+          accountName: Text('Hammad Nadia'),
+          accountEmail: Text('nadia.com@gmail.com'),
+          currentAccountPicture: Image.asset('images/profile.jpg'),
+          decoration: BoxDecoration(
+            color: Colors.purple,
+          ),
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.calendar_view_day,
+            color: Colors.purple,
+          ),
+          title: Text("My Bookings"),
+          onTap: () {},
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.shop,
+            color: Colors.purple,
+          ),
+          title: Text("Buy hair products"),
+          onTap: () {},
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.home,
+            color: Colors.purple,
+          ),
+          title: Text("Home"),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => HomePage()),
+            );
+          },
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.info,
+            color: Colors.purple,
+          ),
+          title: Text("About"),
+          onTap: () {},
+        ),
+      ],
+    ),
+  );
 }
