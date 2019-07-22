@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import './signup.dart';
 import './home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import './crud.dart';
+import './stylist.dart';
+
+bool isStylist;
 
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
-String email, password;
 
 class LoginPage extends StatefulWidget {
 
@@ -16,6 +19,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
+  CRUDMethods crudObj = new CRUDMethods();
   final GlobalKey key1 = new GlobalKey<FormState>();
   bool isLoading = false;
 
@@ -218,11 +222,21 @@ class LoginPageState extends State<LoginPage> {
       context, String email, String password) async {
     FirebaseUser user = await _auth
         .signInWithEmailAndPassword(email: email, password: password)
-        .then((user) {
-      Navigator.push(
+    .then((user) { crudObj.isCustomer?Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
-      );
+      ).then((f){
+        setState(() {
+          isLoading = false;
+        });
+      }): Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => StylistPage()),
+    ).then((f){
+      setState(() {
+        isLoading = false;
+      });
+    });
       print(user.email);
     }).catchError((err) {
       setState(() {
@@ -234,10 +248,6 @@ class LoginPageState extends State<LoginPage> {
     return user;
   }
 
-  Future<String> currentUser()async {
-    FirebaseUser user = await _auth.currentUser();
-    return user.uid;
-  }
 
   String validateEmail(String value) {
     String pattern =

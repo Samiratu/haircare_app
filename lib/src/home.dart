@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './service.dart';
 import './stylist.dart';
+import './crud.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -10,7 +11,10 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  CRUDMethods crudObj = new CRUDMethods();
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
+  User curUser = new User();
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -42,68 +46,14 @@ class HomePageState extends State<HomePage> {
                 Icons.shopping_cart,
                 color: Colors.purple,
               ),
-            )
+            ),
+
           ],
         ),
         body: Container(
           child: ListView(
             children: <Widget>[
-              Container(
-                color: Colors.purple,
-                height: 40.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      child: FlatButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage()),
-                            );
-                          },
-                          child: Text(
-                            "Home",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 12.0),
-                          )),
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-                      child: FlatButton(
-                          onPressed: () {
-                            print("clicked");
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => StylistPage()),
-                            );
-                          },
-                          child: Text(
-                            "Stylits",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 12.0),
-                          )),
-                    ),
-                    Container(
-                      child: FlatButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ServicePage()),
-                            );
-                          },
-                          child: Text(
-                            "Services",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 12.0),
-                          )),
-                    )
-                  ],
-                ),
-              ),
+              header(context),
               Container(
                 height: 130.0,
                 decoration: BoxDecoration(
@@ -325,18 +275,77 @@ class HomePageState extends State<HomePage> {
             ],
           ),
         ),
-      
     );
   }
 }
 
-Widget appDrawer(context){
+Widget header(context){
+  return Container(
+    color: Colors.purple,
+    height: 40.0,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          child: FlatButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomePage()),
+                );
+              },
+              child: Text(
+                "Home",
+                style:
+                TextStyle(color: Colors.white, fontSize: 12.0),
+              )),
+        ),
+        Container(
+          margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+          child: FlatButton(
+              onPressed: () {
+                print("clicked");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => StylistPage()),
+                );
+              },
+              child: Text(
+                "Stylits",
+                style:
+                TextStyle(color: Colors.white, fontSize: 12.0),
+              )),
+        ),
+        Container(
+          child: FlatButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ServicePage()),
+                );
+              },
+              child: Text(
+                "Services",
+                style:
+                TextStyle(color: Colors.white, fontSize: 12.0),
+              )),
+        )
+      ],
+    ),
+  );
+}
+
+
+Widget appDrawer(context,){
   return Drawer(
     elevation: 200.0,
     child: ListView(
       children: <Widget>[
         UserAccountsDrawerHeader(
-          accountName: Text('Hammad Nadia'),
+          accountName: Text("Nadia"),
           accountEmail: Text('nadia.com@gmail.com'),
           currentAccountPicture: Image.asset('images/profile.jpg'),
           decoration: BoxDecoration(
@@ -384,4 +393,13 @@ Widget appDrawer(context){
       ],
     ),
   );
+}
+
+
+class User {
+  var name;
+  var email ;
+  var image;
+
+  User({this.name, this.email, this.image});
 }

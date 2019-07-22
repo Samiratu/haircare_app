@@ -8,10 +8,7 @@ import 'package:path/path.dart';
 import 'dart:io';
 import './crud.dart';
 
-
-
 class StylistPage extends StatefulWidget {
-
   @override
   createState() {
     return StylistPageState();
@@ -27,7 +24,7 @@ class StylistPageState extends State<StylistPage> {
   String stylistCategory;
   String stylistContact;
   QuerySnapshot stylists;
-
+  Stylist stylist = new Stylist();
   Future getImage() async {
     File image;
     image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -35,8 +32,14 @@ class StylistPageState extends State<StylistPage> {
       _imageFile = image;
     });
   }
-  final snackBar = SnackBar(content: Text("Changes saved succesfully", style: TextStyle(color: Colors.white),),
-  backgroundColor: Colors.purple,);
+
+  final snackBar = SnackBar(
+    content: Text(
+      "Changes saved succesfully",
+      style: TextStyle(color: Colors.white),
+    ),
+    backgroundColor: Colors.purple,
+  );
 
   Future uploadImage(BuildContext context) async {
     String fileName = basename(_imageFile.path);
@@ -59,127 +62,86 @@ class StylistPageState extends State<StylistPage> {
   }
 
   @override
-  void initState(){
-    setState(() {
-      crudObj.getData().then((results){
-       stylists = results;
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    crudObj.getData().then((d) {
+      setState(() {
+        stylist.name = d.documents[0].data['fullname'];
+        stylist.cat = d.documents[0].data['category'];
+        stylist.phone = d.documents[0].data['phone'];
       });
     });
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        key: _scaffoldKey,
-        drawer: appDrawer(context),
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            onPressed: () {
-              _scaffoldKey.currentState.openDrawer();
-            },
-            icon: Icon(
-              Icons.menu,
-              color: Colors.purple,
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          key: _scaffoldKey,
+          drawer: appDrawer(context),
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            leading: IconButton(
+              onPressed: () {
+                _scaffoldKey.currentState.openDrawer();
+              },
+              icon: Icon(
+                Icons.menu,
+                color: Colors.purple,
+              ),
             ),
-          ),
-          title: Text(
-            "Stylists",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0,
-                color: Colors.black),
-          ),
-          centerTitle: true,
-          actions: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(12.0),
-              child: Icon(
-                Icons.shopping_cart,
-                color: Colors.purple,
-              ),
-            )
-          ],
-        ),
-        body: Builder(builder: (context)=>
-        Container(
-          child: ListView(
-            children: <Widget>[
-              Container(
-                color: Colors.purple,
-                height: 40.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      child: FlatButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage()),
-                            );
-                          },
-                          child: Text(
-                            "Home",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 12.0),
-                          )),
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-                      child: FlatButton(
-                          onPressed: null,
-                          child: Text(
-                            "Stylits",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 12.0),
-                          )),
-                    ),
-                    Container(
-                      child: FlatButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ServicePage()),
-                            );
-                          },
-                          child: Text(
-                            "Services",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 12.0),
-                          )),
-                    ),
-                  ],
+            title: Text(
+              "Stylists",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                  color: Colors.black),
+            ),
+            centerTitle: true,
+            actions: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(12.0),
+                child: Icon(
+                  Icons.shopping_cart,
+                  color: Colors.purple,
                 ),
-              ),
-              Column(
-                children: <Widget>[
-                  createProfile(_imageFile, context),
-                ],
               )
             ],
           ),
-        ),
-      ),
-    )
-    );}
-
-  List<dynamic> generateListItems() {
-    var item = createProfile(_imageFile, context);
-    var listItems = [];
-    for (int i = 0; i < 10; i++) {
-      listItems.add(item);
-    }
-    return listItems;
+          body: Builder(
+            builder: (context) => Container(
+                  child: ListView(
+                    children: <Widget>[
+                      Container(
+                        color: Colors.purple,
+                        height: 40.0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            header(context),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        children: <Widget>[
+                          createProfile(_imageFile, context),
+                          Divider(
+                            height: 20.0,
+                            color: Colors.grey,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+          ),
+        ));
   }
 
-  createProfile(File _imageFile, context) {
-    return Container(
+  createProfile(File _imageFile, context){
+    return stylist.name != null ? Container(
       margin: EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 10.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -197,29 +159,20 @@ class StylistPageState extends State<StylistPage> {
                           height: 113.0,
                           child: (_downloadUrl!= null)
                               ? Image.network(
-                                  _downloadUrl,
-                                  fit: BoxFit.fill,
-                                )
+                            _downloadUrl,
+                            fit: BoxFit.fill,
+                          )
                               : Image.asset('images/profile.jpg',
-                                  fit: BoxFit.fill),
+                              fit: BoxFit.fill),
                         ),
                       )),
-                  Padding(
-                      padding: EdgeInsets.all(1.0),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.camera_enhance,
-                          color: Colors.black,
-                          size: 30,
-                        ),
-                        onPressed: () => getImage(),
-                      )),
+
                   Container(
                     child: Column(
                       children: <Widget>[
                         Container(
                           child: Text(
-                            "Mary James",
+                            "${stylist.name}",
                             style: TextStyle(
                                 fontSize: 18.0, fontWeight: FontWeight.bold),
                           ),
@@ -227,7 +180,7 @@ class StylistPageState extends State<StylistPage> {
                         Padding(
                           padding: EdgeInsets.all(5.0),
                           child: Text(
-                            "Braids Stylist",
+                            "${stylist.cat}",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.purple),
@@ -236,7 +189,7 @@ class StylistPageState extends State<StylistPage> {
                         Padding(
                           padding: EdgeInsets.all(10),
                           child: Text(
-                            "+237677204981",
+                            "${stylist.phone}",
                             style: TextStyle(
                               fontSize: 11.0,
                             ),
@@ -331,30 +284,24 @@ class StylistPageState extends State<StylistPage> {
                   ),
                 ],
               ),
-              Padding(
-                  padding: EdgeInsets.all(5.0),
-                  child: Container(
-                    child: RaisedButton(
-                      onPressed: () => uploadImage(context).then((f){
-                        downloadImage();
-                      }),
-                      color: Colors.purple,
-                      child: Text(
-                        "Save Changes",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ))
             ],
-          ),
-          Divider(
-            height: 50.0,
-            // color: Colors.purple,
           ),
         ],
       ),
+    ): Center(
+      child: LinearProgressIndicator(),
     );
   }
 }
 
 
+
+
+class Stylist {
+  var name;
+  var cat;
+  var phone;
+  var image;
+
+  Stylist({this.name, this.cat, this.image, this.phone});
+}

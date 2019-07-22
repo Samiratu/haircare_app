@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import './signup.dart';
 import './crud.dart';
-import './stylist.dart';
+
+
+
+bool submitted = false;
 
 //  this is the class for the stylist Signup.
 class StylistSignup extends StatefulWidget {
@@ -21,6 +24,12 @@ class StylistSignupState extends State<StylistSignup> {
   final TextEditingController password = TextEditingController();
   final TextEditingController cpassword = TextEditingController();
   CRUDMethods crudObject = new CRUDMethods();
+
+  updateSubmitted() {
+    setState(() {
+      submitted = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +207,6 @@ class StylistSignupState extends State<StylistSignup> {
                       controller: cpassword,
                     ),
                   ),
-
                   Container(
                     width: 100.0,
                     padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
@@ -212,18 +220,21 @@ class StylistSignupState extends State<StylistSignup> {
                       onPressed: () {
                         if (key2.currentState.validate()) {
                           key2.currentState.save();
-                          Map stylistData = {'email': email.text, 'fullname':fname, 'phone':mphone, 'address': address, 'category':category.text};
-                          crudObject.createStylist(stylistData, email.text, password.text).catchError((e){
-                            print(e.toString());
-                          });
-
+                          crudObject.createUser(context, email.text,
+                              password.text, fname, mphone, address,category.text);
+//                          if (submitted) {
+//                            crudObject.createUser(context, email.text,
+//                                password.text, fname, mphone, address,category.text);
+//                          }
+//                          else {
+//                            crudObject.showAlert(context);
+//                          }
                         } else {
-                          // showAlert(context);
+                          return null;
                         }
                       },
                     ),
                   )
-
                 ],
               ),
             )
@@ -234,4 +245,3 @@ class StylistSignupState extends State<StylistSignup> {
     );
   }
 }
-
