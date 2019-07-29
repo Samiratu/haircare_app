@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
+import 'dart:io';
 import './signup.dart';
 import './crud.dart';
-
-
 
 bool submitted = false;
 
@@ -20,10 +22,22 @@ class StylistSignupState extends State<StylistSignup> {
   final TextEditingController mphone = TextEditingController();
   final TextEditingController address = TextEditingController();
   final TextEditingController email = TextEditingController();
-  final TextEditingController category = TextEditingController();
   final TextEditingController password = TextEditingController();
   final TextEditingController cpassword = TextEditingController();
+  final bool stylist = true;
+  File _imageFile;
+  String _downloadUrl;
   CRUDMethods crudObject = new CRUDMethods();
+  var categories = [
+    "Locks",
+    "Braids",
+    "Corn Rows",
+    "Crochet",
+    "Weave",
+    "Relaxing and Styling",
+    "Natural hair braiding/styling"
+  ];
+  String selectedCategory;
 
   updateSubmitted() {
     setState(() {
@@ -107,12 +121,13 @@ class StylistSignupState extends State<StylistSignup> {
                     decoration: boxDecor,
                     child: TextFormField(
                       decoration: InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.all(10.0),
-                          hintText: " 250 700 000 000",
-                          hintStyle: TextStyle(
-                            fontSize: 8.0,
-                          )),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.all(10.0),
+                        hintText: " 250 700 000 000",
+                        hintStyle: TextStyle(
+                          fontSize: 8.0,
+                        ),
+                      ),
                       validator: validatephone,
                       controller: mphone,
                     ),
@@ -126,19 +141,30 @@ class StylistSignupState extends State<StylistSignup> {
                     ),
                   ),
                   Container(
-                    decoration: boxDecor,
-                    child: TextFormField(
-                      decoration: InputDecoration(
+                      decoration: boxDecor,
+                      child: DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.all(10.0),
-                          hintText: "Braids, weave, Crochet,Make up etc",
+                          hintText: "select category you do best",
                           hintStyle: TextStyle(
                             fontSize: 8.0,
-                          )),
-                      validator: validatename,
-                      controller: category,
-                    ),
-                  ),
+                          ),
+                        ),
+                        items: categories.map((String dropDownStringItem) {
+                          return DropdownMenuItem<String>(
+                            value: dropDownStringItem,
+                            child: Center(
+                              child: Text(dropDownStringItem),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String currentSelected) {
+                          itemSelected(currentSelected);
+                        },
+                        value: selectedCategory,
+                        validator: validatename,
+                      )),
                   Container(
                     width: 250.0,
                     padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
@@ -161,6 +187,26 @@ class StylistSignupState extends State<StylistSignup> {
                       controller: address,
                     ),
                   ),
+                  Container(
+                    width: 250.0,
+                    padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
+                    child: Text(
+                      "Profile Picture ",
+                      style: textDecor,
+                    ),
+                  ),
+                  Container(
+//                      decoration: boxDecor,
+                      child: FlatButton(
+                        color: Colors.purple,
+                        child: Icon(
+                          Icons.file_upload,
+                          size: 40.0,
+                        ),
+                        onPressed: () {
+                          getImageUrl();
+                        },
+                      )),
                   Container(
                     width: 250.0,
                     padding: EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 10.0),
@@ -211,29 +257,28 @@ class StylistSignupState extends State<StylistSignup> {
                     width: 100.0,
                     padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
                     child: RaisedButton(
-                      padding: EdgeInsets.all(10.0),
-                      color: Colors.purple,
-                      child: Text(
-                        "Submit",
-                        style: TextStyle(color: Colors.white, fontSize: 18.0),
-                      ),
-                      onPressed: () {
-                        if (key2.currentState.validate()) {
-                          key2.currentState.save();
-                          crudObject.createUser(context, email.text,
-                              password.text, fname, mphone, address,category.text);
-//                          if (submitted) {
-//                            crudObject.createUser(context, email.text,
-//                                password.text, fname, mphone, address,category.text);
-//                          }
-//                          else {
-//                            crudObject.showAlert(context);
-//                          }
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
+                        padding: EdgeInsets.all(10.0),
+                        color: Colors.purple,
+                        child: Text(
+                          "Submit",
+                          style: TextStyle(color: Colors.white, fontSize: 18.0),
+                        ),
+                        onPressed: () {
+                          if (key2.currentState.validate()) {
+                            key2.currentState.save();
+                            crudObject.createStylist(
+                                context,
+                                email.text,
+                                password.text,
+                                fname,
+                                mphone,
+                                address,
+                                _downloadUrl,
+                                selectedCategory);
+                          } else {
+                            return null;
+                          }
+                        }),
                   )
                 ],
               ),
@@ -243,5 +288,29 @@ class StylistSignupState extends State<StylistSignup> {
       ),
       resizeToAvoidBottomPadding: false,
     );
+  }
+
+  void itemSelected(String currentSelected) {
+    setState(() {
+      this.selectedCategory = currentSelected;
+    });
+  }
+
+  Future getImageUrl() async {
+    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _imageFile = image;
+    });
+    String fileName = basename(_imageFile.path);
+    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = reference.putFile(_imageFile);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+
+    fileName = basename(_imageFile.path);
+    String downloadAddress = await reference.getDownloadURL();
+    print("Image URL : $downloadAddress");
+    setState(() {
+      _downloadUrl = downloadAddress.toString();
+    });
   }
 }

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import './service.dart';
 import './stylist.dart';
 import './crud.dart';
+import './login.dart';
+import './saloons.dart';
+import './appointment.dart';
 
 class HomePage extends StatefulWidget {
-
   createState() {
     return HomePageState();
   }
@@ -13,273 +16,322 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   CRUDMethods crudObj = new CRUDMethods();
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
-  User curUser = new User();
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-        key: _scaffoldKey,
-        drawer: appDrawer(context),
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            onPressed: () {
-              _scaffoldKey.currentState.openDrawer();
-            },
-            icon: Icon(
-              Icons.menu,
+    return Scaffold(
+      key: _scaffoldKey,
+      drawer: appDrawer(context),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          onPressed: () {
+            _scaffoldKey.currentState.openDrawer();
+          },
+          icon: Icon(
+            Icons.menu,
+            color: Colors.purple,
+          ),
+        ),
+        title: Text(
+          "Home",
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 24.0, color: Colors.black),
+        ),
+        centerTitle: true,
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(12.0),
+            child: Icon(
+              Icons.shopping_cart,
               color: Colors.purple,
             ),
           ),
-          title: Text(
-            "Home",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0,
-                color: Colors.black),
-          ),
-          centerTitle: true,
-          actions: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(12.0),
-              child: Icon(
-                Icons.shopping_cart,
-                color: Colors.purple,
-              ),
-            ),
-
-          ],
-        ),
-        body: Container(
-          child: ListView(
-            children: <Widget>[
-              header(context),
-              Container(
+        ],
+      ),
+      body: Container(
+        child: ListView(
+          children: <Widget>[
+            header(context),
+            Card(
+              child: Container(
                 height: 130.0,
                 decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('images/showcase.jpg'),
-                        fit: BoxFit.cover),
-                    border: Border.all(
-                        color: Colors.purple,
-                        width: 2.0,
-                        style: BorderStyle.solid)),
-                child: Align(
-                  child: Text(
-                    "Discount at 30%",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.purple),
-                  ),
+                  image: DecorationImage(
+                      image: AssetImage('images/showcase.jpg'),
+                      fit: BoxFit.cover),
                 ),
-              ),
-              Container(
-                  padding: EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 10.0),
-                  child: Align(
+                child: Align(
+                  child: RaisedButton(
+                    onPressed: () {},
+                    color: Colors.purple,
+                    elevation: 15.0,
                     child: Text(
-                      "CATEGORIES",
+                      "Available Discounts",
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 18.0),
+                          fontWeight: FontWeight.bold, color: Colors.white),
                     ),
-                  )),
-              Container(
-                height: 150.0,
-                child: ListView(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    Container(
-                      width: 140.0,
-                      margin: EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        image: DecorationImage(
-                          image: AssetImage('images/braids.jpg'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: Align(
-                        child: Container(
-                          color: Colors.white,
-                          padding: EdgeInsets.all(3.0),
-                          child: Text(
-                            "Braids",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.purple,
-                                fontSize: 16.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 140.0,
-                      margin: EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        image: DecorationImage(
-                          image: AssetImage('images/crochet.jpg'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: Align(
-                        child: Container(
-                          color: Colors.white,
-                          padding: EdgeInsets.all(3.0),
-                          child: Text(
-                            "Crochet",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.purple,
-                                fontSize: 16.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 140.0,
-                      margin: EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        image: DecorationImage(
-                          image: AssetImage('images/cornrows.jpg'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: Align(
-                        child: Container(
-                          color: Colors.white,
-                          padding: EdgeInsets.all(3.0),
-                          child: Text(
-                            "Cornrows",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.purple,
-                                fontSize: 16.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 140.0,
-                      margin: EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        image: DecorationImage(
-                            image: AssetImage(
-                              'images/weavon.jpg',
-                            ),
-                            fit: BoxFit.cover),
-                      ),
-                      child: Align(
-                        child: Container(
-                          color: Colors.white,
-                          padding: EdgeInsets.all(3.0),
-                          child: Text(
-                            "Weavon",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.purple,
-                                fontSize: 16.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 140.0,
-                      margin: EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        image: DecorationImage(
-                            image: AssetImage(
-                              'images/abb.jpg',
-                            ),
-                            fit: BoxFit.cover),
-                      ),
-                      child: Align(
-                        child: Container(
-                          padding: EdgeInsets.all(3.0),
-                          margin: EdgeInsets.fromLTRB(0.0, 80.0, 0.0, 0.0),
-                          child: Text(
-                            " ",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.purple,
-                                fontSize: 16.0),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 10.0),
-                child: Align(
-                  child: Text(
-                    "BOOK NOW",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
                   ),
                 ),
               ),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Colors.purple,
-                            width: 2.0,
-                            style: BorderStyle.solid),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      margin: EdgeInsets.all(5.0),
-                      child: FlatButton(
-                        onPressed: () {},
-                        child: Text("Home services"),
-                      ),
+            ),
+            Card(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Container(
+                      padding: EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 10.0),
+                      child: Align(
+                        child: Text(
+                          "CATEGORIES",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18.0),
+                        ),
+                      )),
+                  Container(
+                    height: 150.0,
+                    child: ListView(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      children: <Widget>[
+                        Container(
+                          width: 140.0,
+                          margin: EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            image: DecorationImage(
+                              image: AssetImage('images/braids.jpg'),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              color: Colors.white,
+                              padding: EdgeInsets.all(3.0),
+                              child: Text(
+                                "Braids",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.purple,
+                                    fontSize: 16.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: 140.0,
+                          margin: EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            image: DecorationImage(
+                              image: AssetImage('images/crochet.jpg'),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              color: Colors.white,
+                              padding: EdgeInsets.all(3.0),
+                              child: Text(
+                                "Crochet",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.purple,
+                                    fontSize: 16.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: 140.0,
+                          margin: EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            image: DecorationImage(
+                              image: AssetImage('images/cornrows.jpg'),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              color: Colors.white,
+                              padding: EdgeInsets.all(3.0),
+                              child: Text(
+                                "Cornrows",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.purple,
+                                    fontSize: 16.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: 140.0,
+                          margin: EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            image: DecorationImage(
+                                image: AssetImage(
+                                  'images/weavon.jpg',
+                                ),
+                                fit: BoxFit.cover),
+                          ),
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              color: Colors.white,
+                              padding: EdgeInsets.all(3.0),
+                              child: Text(
+                                "Weave",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.purple,
+                                    fontSize: 16.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: 140.0,
+                          margin: EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            image: DecorationImage(
+                                image: AssetImage(
+                                  'images/abb.jpg',
+                                ),
+                                fit: BoxFit.cover),
+                          ),
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              padding: EdgeInsets.all(3.0),
+                              margin: EdgeInsets.fromLTRB(0.0, 80.0, 0.0, 0.0),
+                              color: Colors.white,
+                              child: Text(
+                                "Natural",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.purple,
+                                    fontSize: 16.0),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Colors.purple,
-                            width: 2.0,
-                            style: BorderStyle.solid),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      margin: EdgeInsets.all(5.0),
-                      child: FlatButton(
-                        onPressed: () {},
-                        child: Text("Slot at saloon"),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Colors.purple,
-                      width: 2.0,
-                      style: BorderStyle.solid),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                margin: EdgeInsets.all(5.0),
-                child: FlatButton(
-                  onPressed: () {},
-                  child: Text("Buy Hair Products"),
-                ),
-              )
-            ],
-          ),
+            ),
+            Card(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 10.0),
+                    child: Align(
+                      child: Text(
+                        "BOOK APPOINTMENT",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18.0),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 100.0,
+                    padding: EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Container(
+                          width: 100.0,
+                          decoration: BoxDecoration(
+                            color: Colors.purple,
+                            borderRadius: BorderRadius.circular(25.0),
+                          ),
+                          margin: EdgeInsets.all(5.0),
+                          child: FlatButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => StylistPage()),
+                              );
+                            },
+                            child: Text(
+                              "Stylist",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: 100.0,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25.0),
+                              color: Colors.purple),
+                          margin: EdgeInsets.all(5.0),
+                          child: FlatButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SaloonsPage()),
+                              );
+                            },
+                            child: Text(
+                              "Saloon",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Card(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
+                    child: Align(
+                      child: Text(
+                        "BUY HAIR PRODUCTS",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18.0),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 150.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25.0),
+                        color: Colors.purple),
+                    margin: EdgeInsets.all(5.0),
+                    child: FlatButton(
+                      onPressed: () {},
+                      child: Text(
+                        "Shop Now",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
+      ),
     );
   }
 }
 
-Widget header(context){
+Widget header(context) {
   return Container(
     color: Colors.purple,
     height: 40.0,
@@ -291,14 +343,12 @@ Widget header(context){
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => HomePage()),
+                  MaterialPageRoute(builder: (context) => HomePage()),
                 );
               },
               child: Text(
                 "Home",
-                style:
-                TextStyle(color: Colors.white, fontSize: 12.0),
+                style: TextStyle(color: Colors.white, fontSize: 12.0),
               )),
         ),
         Container(
@@ -308,14 +358,12 @@ Widget header(context){
                 print("clicked");
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => StylistPage()),
+                  MaterialPageRoute(builder: (context) => StylistPage()),
                 );
               },
               child: Text(
                 "Stylits",
-                style:
-                TextStyle(color: Colors.white, fontSize: 12.0),
+                style: TextStyle(color: Colors.white, fontSize: 12.0),
               )),
         ),
         Container(
@@ -323,14 +371,12 @@ Widget header(context){
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => ServicePage()),
+                  MaterialPageRoute(builder: (context) => ServicePage()),
                 );
               },
               child: Text(
                 "Services",
-                style:
-                TextStyle(color: Colors.white, fontSize: 12.0),
+                style: TextStyle(color: Colors.white, fontSize: 12.0),
               )),
         )
       ],
@@ -338,8 +384,9 @@ Widget header(context){
   );
 }
 
-
-Widget appDrawer(context,){
+Widget appDrawer(
+  context,
+) {
   return Drawer(
     elevation: 200.0,
     child: ListView(
@@ -377,8 +424,7 @@ Widget appDrawer(context,){
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => HomePage()),
+              MaterialPageRoute(builder: (context) => HomePage()),
             );
           },
         ),
@@ -390,16 +436,29 @@ Widget appDrawer(context,){
           title: Text("About"),
           onTap: () {},
         ),
+        ListTile(
+          leading: Icon(
+            Icons.exit_to_app,
+            color: Colors.purple,
+          ),
+          title: Text("Sign Out"),
+          onTap: () {
+            if (FirebaseAuth.instance.currentUser() != null) {
+              FirebaseAuth.instance.signOut().then((f) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              }).catchError((e) {
+                print(e.toString());
+              });
+            }
+          },
+        ),
+//        AboutListTile(
+//
+//        )
       ],
     ),
   );
-}
-
-
-class User {
-  var name;
-  var email ;
-  var image;
-
-  User({this.name, this.email, this.image});
 }

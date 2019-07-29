@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import './service.dart';
 import './home.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:path/path.dart';
-import 'dart:io';
 import './crud.dart';
+import './appointment.dart';
+
 
 class StylistPage extends StatefulWidget {
   @override
@@ -16,60 +13,21 @@ class StylistPage extends StatefulWidget {
 }
 
 class StylistPageState extends State<StylistPage> {
-  CRUDMethods crudObj = new CRUDMethods();
+  CRUDMethods crudObject = new CRUDMethods();
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
-  File _imageFile;
-  String _downloadUrl;
   String stylistName;
   String stylistCategory;
   String stylistContact;
   QuerySnapshot stylists;
-  Stylist stylist = new Stylist();
-  Future getImage() async {
-    File image;
-    image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _imageFile = image;
-    });
-  }
-
-  final snackBar = SnackBar(
-    content: Text(
-      "Changes saved succesfully",
-      style: TextStyle(color: Colors.white),
-    ),
-    backgroundColor: Colors.purple,
-  );
-
-  Future uploadImage(BuildContext context) async {
-    String fileName = basename(_imageFile.path);
-    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
-    StorageUploadTask uploadTask = reference.putFile(_imageFile);
-    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
-    setState(() {
-      Scaffold.of(context).showSnackBar(snackBar);
-    });
-  }
-
-  Future downloadImage() async {
-    String fileName = basename(_imageFile.path);
-    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
-    String downloadAddress = await reference.getDownloadURL();
-    print("Image URL : $downloadAddress");
-    setState(() {
-      _downloadUrl = downloadAddress;
-    });
-  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    crudObj.getData().then((d) {
+
+    crudObject.getData().then((results) {
       setState(() {
-        stylist.name = d.documents[0].data['fullname'];
-        stylist.cat = d.documents[0].data['category'];
-        stylist.phone = d.documents[0].data['phone'];
+        stylists = results;
       });
     });
   }
@@ -110,198 +68,165 @@ class StylistPageState extends State<StylistPage> {
               )
             ],
           ),
-          body: Builder(
-            builder: (context) => Container(
-                  child: ListView(
-                    children: <Widget>[
-                      Container(
-                        color: Colors.purple,
-                        height: 40.0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            header(context),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        children: <Widget>[
-                          createProfile(_imageFile, context),
-                          Divider(
-                            height: 20.0,
-                            color: Colors.grey,
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-          ),
+          body: stylistProfile(),
         ));
   }
 
-  createProfile(File _imageFile, context){
-    return stylist.name != null ? Container(
-      margin: EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 10.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  CircleAvatar(
-                      radius: 60.0,
-                      backgroundColor: Colors.purple,
-                      child: ClipOval(
-                        child: SizedBox(
-                          width: 113.0,
-                          height: 113.0,
-                          child: (_downloadUrl!= null)
-                              ? Image.network(
-                            _downloadUrl,
-                            fit: BoxFit.fill,
-                          )
-                              : Image.asset('images/profile.jpg',
-                              fit: BoxFit.fill),
-                        ),
-                      )),
-
-                  Container(
-                    child: Column(
+  Widget stylistProfile() {
+    if (stylists != null) {
+      return ListView.builder(
+          itemCount: stylists.documents.length,
+          itemBuilder: (context, i) {
+            return Card(
+              margin: EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 10.0),
+              child: InkWell(
+                onTap: () {},
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Column(
                       children: <Widget>[
-                        Container(
-                          child: Text(
-                            "${stylist.name}",
-                            style: TextStyle(
-                                fontSize: 18.0, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Text(
-                            "${stylist.cat}",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.purple),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            "${stylist.phone}",
-                            style: TextStyle(
-                              fontSize: 11.0,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 6.0,
-                        ),
                         Row(
                           children: <Widget>[
+                            CircleAvatar(
+                                radius: 60.0,
+                                backgroundColor: Colors.purple,
+                                child: ClipOval(
+                                  child: SizedBox(
+                                    width: 113.0,
+                                    height: 113.0,
+                                    child: (stylists.documents[i]
+                                                .data["photoUrl"] !=
+                                            null)
+                                        ? Image.network(
+                                            "${stylists.documents[i].data["photoUrl"]}",
+                                            fit: BoxFit.fill,
+                                          )
+                                        : Image.asset('images/profile.jpg',
+                                            fit: BoxFit.fill),
+                                  ),
+                                )),
                             Container(
-                              child: Padding(
-                                  padding: EdgeInsets.all(1.0),
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.message,
-                                      color: Colors.purple,
-                                      size: 35,
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    child: Text(
+                                      "${stylists.documents[i].data["fullname"]}",
+                                      style: TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    onPressed: () {},
-                                  )),
-                            ),
-                            Container(
-                              // padding:EdgeInsets.all(10.0),
-                              child: Text(
-                                "Send message",
-                                style: TextStyle(
-                                  fontSize: 9.0,
-                                  fontWeight: FontWeight.bold,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(5.0),
+                                    child: Text(
+                                      "${stylists.documents[i].data["category"]}",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.purple),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Text(
+                                      "${stylists.documents[i].data["address"]}",
+                                      style: TextStyle(
+                                        fontSize: 11.0,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 6.0,
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      Container(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(1.0),
+                                          child: RaisedButton(
+                                            color: Colors.purple,
+                                            child: Text(
+                                              "Book Stylist",
+                                              style: TextStyle(
+                                                  fontSize: 10.0,
+                                                  color: Colors.white),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AppointmentPage()),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        Container(
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                height: 40.0,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey, width: 1.0, style: BorderStyle.solid)
+                                ),
+                                  child: FlatButton(
+                                onPressed: () {},
+                                child: Text("Edit review", style: TextStyle(fontSize: 12.0),),
+                              )),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  starReview(),
+                                  starReview(),
+                                  starReview(),
+                                  starReview(),
+                                  starReview(),
+                                ],
+                              ),
+                              Container(
+                                width: 83.0,
+                                margin:
+                                    EdgeInsets.fromLTRB(30.0, 10.0, 0.0, 5.0),
+                                child: RaisedButton(
+                                  onPressed: () {},
+                                  color: Colors.purple,
+                                  child: Text(
+                                    "See Album",
+                                    style: TextStyle(
+                                        fontSize: 10.0, color: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        )
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  )
-                ],
+                  ],
+                ),
               ),
-              Row(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text("Reviews"),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Container(
-                        child: Icon(
-                          Icons.star_border,
-                          size: 16.0,
-                        ),
-                      ),
-                      Container(
-                        child: Icon(
-                          Icons.star_border,
-                          size: 16.0,
-                        ),
-                      ),
-                      Container(
-                        child: Icon(
-                          Icons.star_border,
-                          size: 16.0,
-                        ),
-                      ),
-                      Container(
-                        child: Icon(
-                          Icons.star_border,
-                          size: 16.0,
-                        ),
-                      ),
-                      Container(
-                        child: Icon(
-                          Icons.star_border,
-                          size: 16.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    width: 90.0,
-                    margin: EdgeInsets.fromLTRB(30.0, 10.0, 0.0, 5.0),
-                    child: RaisedButton(
-                      onPressed: () {},
-                      color: Colors.purple,
-                      child: Text(
-                        "See Album",
-                        style: TextStyle(fontSize: 10.0, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    ): Center(
-      child: LinearProgressIndicator(),
-    );
+            );
+          });
+    } else {
+      return LinearProgressIndicator();
+    }
   }
 }
 
-
-
-
-class Stylist {
-  var name;
-  var cat;
-  var phone;
-  var image;
-
-  Stylist({this.name, this.cat, this.image, this.phone});
+Widget starReview() {
+  return Container(
+    child: Icon(
+      Icons.star_border,
+      size: 13.0,
+    ),
+  );
 }

@@ -3,9 +3,6 @@ import './signup.dart';
 import './home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import './crud.dart';
-import './stylist.dart';
-
-bool isStylist;
 
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -222,16 +219,9 @@ class LoginPageState extends State<LoginPage> {
       context, String email, String password) async {
     FirebaseUser user = await _auth
         .signInWithEmailAndPassword(email: email, password: password)
-    .then((user) { crudObj.isCustomer?Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      ).then((f){
-        setState(() {
-          isLoading = false;
-        });
-      }): Navigator.pushReplacement(
+    .then((user) { Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => StylistPage()),
+      MaterialPageRoute(builder: (context) => HomePage()),
     ).then((f){
       setState(() {
         isLoading = false;
