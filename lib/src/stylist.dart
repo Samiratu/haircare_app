@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import './crud.dart';
 import './appointment.dart';
 
-
 class StylistPage extends StatefulWidget {
   @override
   createState() {
@@ -156,7 +155,11 @@ class StylistPageState extends State<StylistPage> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        AppointmentPage()),
+                                                        AppointmentPage(
+                                                          stylistId: stylists
+                                                              .documents[i]
+                                                              .data["uid"],
+                                                        )),
                                               );
                                             },
                                           ),
@@ -173,14 +176,19 @@ class StylistPageState extends State<StylistPage> {
                           child: Row(
                             children: <Widget>[
                               Container(
-                                height: 40.0,
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey, width: 1.0, style: BorderStyle.solid)
-                                ),
+                                  height: 40.0,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.grey,
+                                          width: 1.0,
+                                          style: BorderStyle.solid)),
                                   child: FlatButton(
-                                onPressed: () {},
-                                child: Text("Edit review", style: TextStyle(fontSize: 12.0),),
-                              )),
+                                    onPressed: () {},
+                                    child: Text(
+                                      "Edit review",
+                                      style: TextStyle(fontSize: 12.0),
+                                    ),
+                                  )),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,

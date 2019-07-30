@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import './home.dart';
 import './stylist.dart';
 import './signup.dart';
+import './crud.dart';
+import './confirm.dart';
 
 class AppointmentPage extends StatefulWidget {
-//  String stylistEmail;
-//  AppointmentPage(this.stylistEmail);
+  final String stylistId;
+  const AppointmentPage({Key key, this.stylistId}): super(key: key);
   @override
   _AppointmentPageState createState() => _AppointmentPageState();
 }
 
 class _AppointmentPageState extends State<AppointmentPage> {
+  CRUDMethods crudObject = new CRUDMethods();
   DateTime currentDate = new DateTime.now();
   TimeOfDay currentTime = new TimeOfDay.now();
   var services = ["Home service", "Go to stylist"];
@@ -301,7 +305,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
     );
   }
 
-  Widget submitField() {
+  Widget submitField(){
     return Container(
       width: 150.0,
       height: 45.0,
@@ -311,12 +315,26 @@ class _AppointmentPageState extends State<AppointmentPage> {
       ),
       child: RaisedButton(
         color: Colors.purple,
-        onPressed: () {},
+        onPressed: () {
+         createAppointment();
+         Navigator.push(
+           context,
+           MaterialPageRoute(builder: (context) => ConfirmPage()),
+         );
+        },
         child: Text(
           "Submit",
           style: TextStyle(color: Colors.white),
         ),
       ),
     );
+  }
+
+  createAppointment() async{
+    var auth = await FirebaseAuth.instance.currentUser();
+    String uid = auth.uid;
+    crudObject.addAppointment(DateTime.now(), currentDate.toString(), "incomplete", currentTime.toString(), uid, widget.stylistId, selectedStyle, selectedService).catchError((e){
+      print(e.toString());
+    });
   }
 }
