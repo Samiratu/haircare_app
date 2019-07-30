@@ -31,6 +31,8 @@ dependencies:
   intl:
 
 
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -50,6 +52,7 @@ flutter:
     - images/cornrows.jpg
     - images/profile.jpg
     - images/abb.jpg
+    - images/saloon.jpg
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

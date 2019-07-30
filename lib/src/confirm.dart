@@ -66,8 +66,49 @@ class ConfirmPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Text(
-                      "You will recieve confirmation from the stylist shortly"),
+                  Container(
+                    height: 70.0,
+                  ),
+                  Container(
+                    width: 250.0,
+                    child: Text(
+                      "You will recieve confirmation from the stylist shortly.",
+                      style: TextStyle(
+                        fontSize: 17.0,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 130.0,
+                    height: 60.0,
+                    alignment: Alignment.bottomRight,
+                    margin: EdgeInsets.fromLTRB(0.0, 40.0, 0.0, 0.0),
+                    child: RaisedButton(
+                      color: Colors.purple,
+                      elevation: 20.0,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        );
+                      },
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.home,
+                            color: Colors.white,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Home",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

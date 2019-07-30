@@ -5,7 +5,6 @@ import './stylist.dart';
 import './crud.dart';
 import './login.dart';
 import './saloons.dart';
-import './appointment.dart';
 
 class HomePage extends StatefulWidget {
   createState() {
@@ -211,7 +210,6 @@ class HomePageState extends State<HomePage> {
                             child: Container(
                               padding: EdgeInsets.all(3.0),
                               margin: EdgeInsets.fromLTRB(0.0, 80.0, 0.0, 0.0),
-                              color: Colors.white,
                               child: Text(
                                 "Natural",
                                 style: TextStyle(
