@@ -6,15 +6,19 @@ import './stylist.dart';
 import './signup.dart';
 import './crud.dart';
 import './confirm.dart';
+import './drawer.dart';
+
+bool submitted = false;
 
 class AppointmentPage extends StatefulWidget {
   final String stylistId;
-  const AppointmentPage({Key key, this.stylistId}): super(key: key);
+  const AppointmentPage({Key key, this.stylistId}) : super(key: key);
   @override
   _AppointmentPageState createState() => _AppointmentPageState();
 }
 
 class _AppointmentPageState extends State<AppointmentPage> {
+  final key3 = new GlobalKey<FormState>();
   CRUDMethods crudObject = new CRUDMethods();
   DateTime currentDate = new DateTime.now();
   TimeOfDay currentTime = new TimeOfDay.now();
@@ -28,6 +32,12 @@ class _AppointmentPageState extends State<AppointmentPage> {
   ];
   String selectedService;
   String selectedStyle;
+
+  updateSubmitted() {
+    setState(() {
+      submitted = true;
+    });
+  }
 
   void serviceSelected(String currentSelected) {
     setState(() {
@@ -76,7 +86,11 @@ class _AppointmentPageState extends State<AppointmentPage> {
       },
     );
     setState(() {
-      currentTime = picked;
+      if (picked != currentTime) {
+        currentTime = picked;
+      }else{
+        return null;
+      }
     });
   }
 
@@ -85,7 +99,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-          drawer: appDrawer(context),
+          drawer: DrawerPage(),
           appBar: AppBar(
             backgroundColor: Colors.purple,
             leading: IconButton(
@@ -120,21 +134,22 @@ class _AppointmentPageState extends State<AppointmentPage> {
 
   Widget bookingForm() {
     return Form(
+        key: key3,
         child: Column(
-      children: <Widget>[
-        dateField(),
-        timeField(),
-        Card(
-          child: Column(
-            children: <Widget>[
-              styleField(),
-              serviceField(),
-            ],
-          ),
-        ),
-        submitField(),
-      ],
-    ));
+          children: <Widget>[
+            dateField(),
+            timeField(),
+            Card(
+              child: Column(
+                children: <Widget>[
+                  styleField(),
+                  serviceField(),
+                ],
+              ),
+            ),
+            submitField(),
+          ],
+        ));
   }
 
   Widget dateField() {
@@ -305,7 +320,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
     );
   }
 
-  Widget submitField(){
+  Widget submitField() {
     return Container(
       width: 150.0,
       height: 45.0,
@@ -316,11 +331,19 @@ class _AppointmentPageState extends State<AppointmentPage> {
       child: RaisedButton(
         color: Colors.purple,
         onPressed: () {
-         createAppointment();
-         Navigator.push(
-           context,
-           MaterialPageRoute(builder: (context) => ConfirmPage()),
-         );
+          if (key3.currentState.validate()) {
+            updateSubmitted();
+            key3.currentState.save();
+            if (submitted) {
+              createAppointment();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ConfirmPage()),
+              );
+            } else {
+              return null;
+            }
+          }
         },
         child: Text(
           "Submit",
@@ -330,10 +353,20 @@ class _AppointmentPageState extends State<AppointmentPage> {
     );
   }
 
-  createAppointment() async{
+  createAppointment() async {
     var auth = await FirebaseAuth.instance.currentUser();
     String uid = auth.uid;
-    crudObject.addAppointment(DateTime.now(), currentDate.toString(), "incomplete", currentTime.toString(), uid, widget.stylistId, selectedStyle, selectedService).catchError((e){
+    crudObject
+        .addAppointment(
+            DateTime.now(),
+            currentDate.toString(),
+            "incomplete",
+            currentTime.toString(),
+            uid,
+            widget.stylistId,
+            selectedStyle,
+            selectedService)
+        .catchError((e) {
       print(e.toString());
     });
   }

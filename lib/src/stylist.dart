@@ -3,6 +3,7 @@ import './home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import './crud.dart';
 import './appointment.dart';
+import './drawer.dart';
 
 class StylistPage extends StatefulWidget {
   @override
@@ -37,7 +38,7 @@ class StylistPageState extends State<StylistPage> {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           key: _scaffoldKey,
-          drawer: appDrawer(context),
+          drawer: DrawerPage(),
           appBar: AppBar(
             backgroundColor: Colors.white,
             leading: IconButton(

@@ -5,6 +5,7 @@ import './stylist.dart';
 import './crud.dart';
 import './login.dart';
 import './saloons.dart';
+import './drawer.dart';
 
 class HomePage extends StatefulWidget {
   createState() {
@@ -20,7 +21,7 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: appDrawer(context),
+      drawer: DrawerPage(),
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
@@ -382,81 +383,82 @@ Widget header(context) {
   );
 }
 
-Widget appDrawer(
-  context,
-) {
-  return Drawer(
-    elevation: 200.0,
-    child: ListView(
-      children: <Widget>[
-        UserAccountsDrawerHeader(
-          accountName: Text("Nadia"),
-          accountEmail: Text('nadia.com@gmail.com'),
-          currentAccountPicture: Image.asset('images/profile.jpg'),
-          decoration: BoxDecoration(
-            color: Colors.purple,
-          ),
-        ),
-        ListTile(
-          leading: Icon(
-            Icons.calendar_view_day,
-            color: Colors.purple,
-          ),
-          title: Text("My Bookings"),
-          onTap: () {},
-        ),
-        ListTile(
-          leading: Icon(
-            Icons.shop,
-            color: Colors.purple,
-          ),
-          title: Text("Buy hair products"),
-          onTap: () {},
-        ),
-        ListTile(
-          leading: Icon(
-            Icons.home,
-            color: Colors.purple,
-          ),
-          title: Text("Home"),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-            );
-          },
-        ),
-        ListTile(
-          leading: Icon(
-            Icons.info,
-            color: Colors.purple,
-          ),
-          title: Text("About"),
-          onTap: () {},
-        ),
-        ListTile(
-          leading: Icon(
-            Icons.exit_to_app,
-            color: Colors.purple,
-          ),
-          title: Text("Sign Out"),
-          onTap: () {
-            if (FirebaseAuth.instance.currentUser() != null) {
-              FirebaseAuth.instance.signOut().then((f) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                );
-              }).catchError((e) {
-                print(e.toString());
-              });
-            }
-          },
-        ),
-//        AboutListTile(
+//Widget appDrawer(context) {
+//  return Drawer(
+//    elevation: 200.0,
+//    child: ListView(
+//      children: <Widget>[
+//        UserAccountsDrawerHeader(
+//          accountName: Text("Nadia"),
+//          accountEmail: Text('nadia@gmail.com'),
+//          currentAccountPicture: Image.asset('images/profile.jpg'),
+//          decoration: BoxDecoration(
+//            color: Colors.purple,
+//          ),
+//        ),
+//        ListTile(
+//          leading: Icon(
+//            Icons.calendar_view_day,
+//            color: Colors.purple,
+//          ),
+//          title: Text("My Bookings"),
+//          onTap: () {},
+//        ),
+//        ListTile(
+//          leading: Icon(
+//            Icons.shop,
+//            color: Colors.purple,
+//          ),
+//          title: Text("Buy hair products"),
+//          onTap: () {},
+//        ),
+//        ListTile(
+//          leading: Icon(
+//            Icons.home,
+//            color: Colors.purple,
+//          ),
+//          title: Text("Home"),
+//          onTap: () {
+//            Navigator.push(
+//              context,
+//              MaterialPageRoute(builder: (context) => HomePage()),
+//            );
+//          },
+//        ),
+//        ListTile(
+//          leading: Icon(
+//            Icons.info,
+//            color: Colors.purple,
+//          ),
+//          title: Text("About"),
+//          onTap: () {},
+//        ),
+//        ListTile(
+//          leading: Icon(
+//            Icons.exit_to_app,
+//            color: Colors.purple,
+//          ),
+//          title: Text("Sign Out"),
+//          onTap: () {
+//            signoutUser();
+//          },
+//        ),
+//      ],
+//    ),
+//  );
+//}
 //
-//        )
-      ],
-    ),
-  );
-}
+//void signoutUser() {
+//  FirebaseAuth.instance.signOut();
+//}
+//
+//displayUser() async {
+//  var auth = await FirebaseAuth.instance.currentUser();
+//  if (auth != null) {
+//    var email = auth.email;
+//    print("This is the $email");
+//    return email;
+//  } else {
+//    return " ";
+//  }
+//}

@@ -129,7 +129,7 @@ class CRUDMethods {
     String style,
     String service,
   ) async {
-    if (isLoggedIn()) {
+    if (isLoggedIn() && uid != stylistId) {
       DocumentReference reference = await Firestore.instance.collection("appointment").add({
        "Date_created":dateCreated,
        "appointment_date":appointmentDate,
@@ -140,6 +140,8 @@ class CRUDMethods {
         "service_type":service,
         "stylist_id":stylistId,
       });
+    }else{
+      return null;
     }
   }
 }

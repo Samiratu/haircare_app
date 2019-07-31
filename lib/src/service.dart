@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './home.dart';
+import './drawer.dart';
 
 class ServicePage extends StatefulWidget {
   @override
@@ -16,7 +16,7 @@ class ServicePageState extends State<ServicePage> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         key: _scaffoldKey,
-        drawer: appDrawer(context),
+        drawer: DrawerPage(),
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {

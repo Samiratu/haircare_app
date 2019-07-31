@@ -407,7 +407,17 @@ String validatePassword(var value) {
   }
 }
 
-
+String validatePass(var value, String pass) {
+  if (value.length == 0) {
+    return "password is required";
+  } else if (value.length < 6) {
+    return "password too short";
+  } else if( value != pass) {
+    return "passwords don't matcj";
+  }else{
+    return null;
+  }
+}
 
 
 

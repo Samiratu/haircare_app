@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import './home.dart';
+import './stylist.dart';
 import './appointment.dart';
-
+import './drawer.dart';
 
 class SaloonsPage extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class _SaloonsPageState extends State<SaloonsPage> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         key: _scaffoldKey,
-        drawer: appDrawer(context),
+        drawer: DrawerPage(),
         appBar: saloonAppBar(),
         body: saloonProfile(),
       ),
@@ -118,14 +119,14 @@ class _SaloonsPageState extends State<SaloonsPage> {
       margin: EdgeInsets.all(5.0),
       child: FlatButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    AppointmentPage()),
-          );
-
-          },
+          if(text.contains("B")){
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AppointmentPage()),
+            );
+          }
+        },
         child: Text(
           text,
           style: TextStyle(color: Colors.white, fontSize: 11.0),
