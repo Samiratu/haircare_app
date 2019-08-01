@@ -2,9 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import './login.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class CRUDMethods {
   final bool stylist = true;
+  FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
   bool isLoggedIn() {
     if (FirebaseAuth.instance.currentUser() != null) {
@@ -85,7 +87,9 @@ class CRUDMethods {
         .then((user) {
       createDataCustomer(user.uid, name.text, email, phone.text, address.text,
           context, category);
-    }).catchError((er) {
+    }).then(((f){
+      saveDeviceToken();
+    })).catchError((er) {
       if (er.message
           .contains("The email address is already in use by another account")) {
         showAlert(context);
@@ -102,7 +106,9 @@ class CRUDMethods {
         .then((user) {
       createDataStylist(user.uid, name.text, email, phone.text, address.text,
           context, category, stylist, photoUrl);
-    }).catchError((er) {
+    }).then(((f){
+      saveDeviceToken();
+    })).catchError((er) {
       if (er.message
           .contains("The email address is already in use by another account")) {
         showAlert(context);
@@ -130,18 +136,36 @@ class CRUDMethods {
     String service,
   ) async {
     if (isLoggedIn() && uid != stylistId) {
-      DocumentReference reference = await Firestore.instance.collection("appointment").add({
-       "Date_created":dateCreated,
-       "appointment_date":appointmentDate,
-       "appointment_status":appointmentStatus,
-       "appointment_time": appointmentTime,
-       "customer_id":uid,
-        "servcice_id":style,
-        "service_type":service,
-        "stylist_id":stylistId,
+      DocumentReference reference =
+          await Firestore.instance.collection("appointment").add({
+        "Date_created": dateCreated,
+        "appointment_date": appointmentDate,
+        "appointment_status": appointmentStatus,
+        "appointment_time": appointmentTime,
+        "customer_id": uid,
+        "servcice_id": style,
+        "service_type": service,
+        "stylist_id": stylistId,
       });
-    }else{
+    } else {
       return null;
+    }
+  }
+
+  saveDeviceToken() async {
+//    get current user
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    String uid = user.uid;
+//  get token from the device
+    String fcmToken = await firebaseMessaging.getToken();
+    if (fcmToken != null) {
+      var tokenRef = Firestore.instance.collection('users')
+          .document(uid)
+          .collection('tokens')
+          .document(fcmToken);
+      await tokenRef.setData({'token':fcmToken,
+      'createdOn': FieldValue.serverTimestamp(),
+      });
     }
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './home.dart';
+import './profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import './crud.dart';
 import './appointment.dart';
@@ -68,174 +68,185 @@ class StylistPageState extends State<StylistPage> {
               )
             ],
           ),
-          body: stylistProfile(),
+          body: stylistProf(),
         ));
   }
 
-  Widget stylistProfile() {
-    if (stylists != null) {
-      return ListView.builder(
-          itemCount: stylists.documents.length,
-          itemBuilder: (context, i) {
-            return Card(
-              margin: EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 10.0),
-              child: InkWell(
-                onTap: () {},
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            CircleAvatar(
-                                radius: 60.0,
-                                backgroundColor: Colors.purple,
-                                child: ClipOval(
-                                  child: SizedBox(
-                                    width: 113.0,
-                                    height: 113.0,
-                                    child: (stylists.documents[i]
-                                                .data["photoUrl"] !=
-                                            null)
-                                        ? Image.network(
-                                            "${stylists.documents[i].data["photoUrl"]}",
-                                            fit: BoxFit.fill,
-                                          )
-                                        : Image.asset('images/profile.jpg',
-                                            fit: BoxFit.fill),
-                                  ),
-                                )),
-                            Container(
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                    child: Text(
-                                      "${stylists.documents[i].data["fullname"]}",
-                                      style: TextStyle(
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(5.0),
-                                    child: Text(
-                                      "${stylists.documents[i].data["category"]}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.purple),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Text(
-                                      "${stylists.documents[i].data["address"]}",
-                                      style: TextStyle(
-                                        fontSize: 11.0,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 6.0,
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Container(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(1.0),
-                                          child: RaisedButton(
-                                            color: Colors.purple,
-                                            child: Text(
-                                              "Book Stylist",
-                                              style: TextStyle(
-                                                  fontSize: 10.0,
-                                                  color: Colors.white),
-                                            ),
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AppointmentPage(
-                                                          stylistId: stylists
-                                                              .documents[i]
-                                                              .data["uid"],
-                                                        )),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        Container(
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                  height: 40.0,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.grey,
-                                          width: 1.0,
-                                          style: BorderStyle.solid)),
-                                  child: FlatButton(
-                                    onPressed: () {},
-                                    child: Text(
-                                      "Edit review",
-                                      style: TextStyle(fontSize: 12.0),
+  Widget stylistProf() {
+    return StreamBuilder(
+      stream: Firestore.instance
+          .collection("users")
+          .where(
+            "stylist",
+            isEqualTo: true,
+          )
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return LinearProgressIndicator();
+        } else {
+          return ListView.builder(
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (context, index) {
+              return Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProfilePage()),
+                              );
+                            },
+                            child: Container(
+                              child: CircleAvatar(
+                                  radius: 47.0,
+                                  backgroundColor: Colors.purple,
+                                  child: ClipOval(
+                                    child: SizedBox(
+                                      width: 90.0,
+                                      height: 90.0,
+                                      child: (snapshot.data.documents[index]
+                                                  .data["photoUrl"] !=
+                                              null)
+                                          ? Image.network(
+                                              "${snapshot.data.documents[index].data["photoUrl"]}",
+                                              fit: BoxFit.fill,
+                                            )
+                                          : Image.asset('images/profile.jpg',
+                                              fit: BoxFit.fill),
                                     ),
                                   )),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  starReview(),
-                                  starReview(),
-                                  starReview(),
-                                  starReview(),
-                                  starReview(),
-                                ],
-                              ),
-                              Container(
-                                width: 83.0,
-                                margin:
-                                    EdgeInsets.fromLTRB(30.0, 10.0, 0.0, 5.0),
-                                child: RaisedButton(
-                                  onPressed: () {},
-                                  color: Colors.purple,
+                            ),
+                          ),
+                          Container(
+                            child: Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.all(3.0),
                                   child: Text(
-                                    "See Album",
+                                    "${snapshot.data.documents[index].data["fullname"]}",
                                     style: TextStyle(
-                                        fontSize: 10.0, color: Colors.white),
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                              ),
-                            ],
+                                Container(
+                                  child: Text(
+                                    "${snapshot.data.documents[index].data["category"]}",
+                                    style: TextStyle(
+                                      fontSize: 17.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
+                                  ),
+                                ),
+                                Container(
+                                  child: Text(
+                                    "${snapshot.data.documents[index].data["address"]}",
+                                    style: TextStyle(
+                                      fontSize: 15.0,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(top:17.0),
+                                  child:
+                                  Row(
+                                    children: <Widget>[
+                                      Row(
+                                        children: <Widget>[
+                                          starReview(),
+                                          starReview(),
+                                          starReview(),
+                                          starReview(),
+                                          starReview(),
+                                        ],
+                                      ),
+
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          Container(
+                            child: Column(
+                              children: <Widget>[
+                                button("Book Now"),
+                                Container(
+                                  margin: EdgeInsets.only(left: 7.0),
+                                  width: 80,
+                                  height: 40.0,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey, width: 1.0, style: BorderStyle.solid)
+                                  ),
+                                  child: FlatButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ProfilePage()),
+                                      );
+
+                                    },
+                                    child: Text("View Details", style: TextStyle(fontSize: 8.0, fontWeight: FontWeight.bold),),
+                                  ),),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+              );
+            },
+          );
+        }
+      },
+    );
+  }
+
+  Widget button( String text){
+    return Container(
+      width: 80.0,
+      height: 40.0,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          color: Colors.purple),
+      margin: EdgeInsets.all(15.0),
+      child: FlatButton(
+        onPressed: () {
+          if(text.contains("B")){
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AppointmentPage()),
             );
-          });
-    } else {
-      return LinearProgressIndicator();
-    }
+          }
+        },
+        child: Text(
+          text,
+          style: TextStyle(color: Colors.white, fontSize: 10.0),
+        ),
+      ),
+    );
   }
 }
+
+
 
 Widget starReview() {
   return Container(
     child: Icon(
-      Icons.star_border,
-      size: 13.0,
+      Icons.favorite,
+      color: Colors.purple,
+      size: 17.0,
     ),
   );
 }

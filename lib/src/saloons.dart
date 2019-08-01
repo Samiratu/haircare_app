@@ -133,7 +133,6 @@ class _SaloonsPageState extends State<SaloonsPage> {
         ),
       ),
     );
-
   }
 
   Widget saloonAppBar() {

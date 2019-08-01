@@ -29,6 +29,7 @@ class _DrawerPageState extends State<DrawerPage> {
       child: ListView(
         children: <Widget>[
           UserAccountsDrawerHeader(
+            accountName: Text(""),
             accountEmail: Text('$userIn'),
             currentAccountPicture: Image.asset('images/profile.jpg',),
             decoration: BoxDecoration(
