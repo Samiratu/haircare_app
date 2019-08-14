@@ -35,7 +35,6 @@ class ConfirmPage extends StatelessWidget {
             color: Colors.white12,
             child: Card(
               child: Column(
-//                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   logoSection(),
                   Card(

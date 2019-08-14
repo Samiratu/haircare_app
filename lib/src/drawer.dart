@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import './home.dart';
+import './login.dart';
+import './booked.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class DrawerPage extends StatefulWidget {
@@ -33,7 +35,7 @@ class _DrawerPageState extends State<DrawerPage> {
             accountEmail: Text('$userIn'),
             currentAccountPicture: Image.asset('images/profile.jpg',),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30.0),
+              borderRadius: BorderRadius.circular(15.0),
               color: Colors.purple,
             ),
           ),
@@ -43,7 +45,12 @@ class _DrawerPageState extends State<DrawerPage> {
               color: Colors.purple,
             ),
             title: Text("My Bookings"),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => BookedPage()),
+              );
+            },
           ),
           ListTile(
             leading: Icon(
@@ -81,7 +88,7 @@ class _DrawerPageState extends State<DrawerPage> {
             ),
             title: Text("Sign Out"),
             onTap: () {
-              signoutUser();
+              signoutUser(context);
             },
           ),
         ],
@@ -90,8 +97,13 @@ class _DrawerPageState extends State<DrawerPage> {
   }
 }
 
-void signoutUser() {
-  FirebaseAuth.instance.signOut();
+void signoutUser(context) {
+  FirebaseAuth.instance.signOut().then((f){
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  });
 }
 
 displayUser() async {

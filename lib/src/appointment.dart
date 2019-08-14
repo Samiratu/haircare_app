@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-import './home.dart';
 import './stylist.dart';
 import './signup.dart';
 import './crud.dart';
@@ -12,7 +11,9 @@ bool submitted = false;
 
 class AppointmentPage extends StatefulWidget {
   final String stylistId;
-  const AppointmentPage({Key key, this.stylistId}) : super(key: key);
+  final String stylistName;
+  final String stylistEmail;
+  const AppointmentPage({Key key, this.stylistId, this.stylistName, this.stylistEmail}) : super(key: key);
   @override
   _AppointmentPageState createState() => _AppointmentPageState();
 }
@@ -216,7 +217,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
           children: <Widget>[
             Container(
               margin: EdgeInsets.only(top: 20.0),
-              child: Text(currentTime.toString()),
+              child: Text(TimeOfDay(hour: currentTime.hour, minute: currentTime.minute).toString()),
             ),
             Container(
               width: 180.0,
@@ -355,17 +356,18 @@ class _AppointmentPageState extends State<AppointmentPage> {
 
   createAppointment() async {
     var auth = await FirebaseAuth.instance.currentUser();
-    String uid = auth.uid;
+    String emailC = auth.email;
     crudObject
         .addAppointment(
             DateTime.now(),
-            currentDate.toString(),
-            "incomplete",
+        currentDate.toString(),
+            "Pending",
             currentTime.toString(),
-            uid,
+            emailC,
             widget.stylistId,
             selectedStyle,
-            selectedService)
+            selectedService,
+    widget.stylistName)
         .catchError((e) {
       print(e.toString());
     });

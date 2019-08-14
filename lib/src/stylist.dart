@@ -94,9 +94,10 @@ class StylistPageState extends State<StylistPage> {
                   child: Column(
                     children: <Widget>[
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           GestureDetector(
-                            onTap: (){
+                            onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -140,7 +141,7 @@ class StylistPageState extends State<StylistPage> {
                                   child: Text(
                                     "${snapshot.data.documents[index].data["category"]}",
                                     style: TextStyle(
-                                      fontSize: 17.0,
+                                        fontSize: 17.0,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black),
                                   ),
@@ -154,9 +155,8 @@ class StylistPageState extends State<StylistPage> {
                                   ),
                                 ),
                                 Container(
-                                  margin: EdgeInsets.only(top:17.0),
-                                  child:
-                                  Row(
+                                  margin: EdgeInsets.only(top: 17.0),
+                                  child: Row(
                                     children: <Widget>[
                                       Row(
                                         children: <Widget>[
@@ -167,7 +167,6 @@ class StylistPageState extends State<StylistPage> {
                                           starReview(),
                                         ],
                                       ),
-
                                     ],
                                   ),
                                 ),
@@ -177,25 +176,40 @@ class StylistPageState extends State<StylistPage> {
                           Container(
                             child: Column(
                               children: <Widget>[
-                                button("Book Now"),
+                                button("Book Now", snapshot, index),
                                 Container(
                                   margin: EdgeInsets.only(left: 7.0),
                                   width: 80,
                                   height: 40.0,
                                   decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey, width: 1.0, style: BorderStyle.solid)
-                                  ),
+                                      border: Border.all(
+                                          color: Colors.grey,
+                                          width: 1.0,
+                                          style: BorderStyle.solid)),
                                   child: FlatButton(
                                     onPressed: () {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => ProfilePage()),
+                                            builder: (context) => ProfilePage(
+                                                  stylistName:
+                                                      "${snapshot.data.documents[index].data["fullname"]}",
+                                                  stylistEmail: "${snapshot.data.documents[index].data["email"]}",
+                                                  stylistPhone:
+                                                      "${snapshot.data.documents[index].data["phone"]}",
+                                              stylistAddress: "${snapshot.data.documents[index].data["address"]}",
+                                              stylistUrl: "${snapshot.data.documents[index].data["photoUrl"]}",
+                                                )),
                                       );
-
                                     },
-                                    child: Text("View Details", style: TextStyle(fontSize: 8.0, fontWeight: FontWeight.bold),),
-                                  ),),
+                                    child: Text(
+                                      "View Details",
+                                      style: TextStyle(
+                                          fontSize: 8.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -212,21 +226,25 @@ class StylistPageState extends State<StylistPage> {
     );
   }
 
-  Widget button( String text){
+  Widget button(String text, snapshot, index) {
     return Container(
       width: 80.0,
       height: 40.0,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          color: Colors.purple),
+          borderRadius: BorderRadius.circular(10.0), color: Colors.purple),
       margin: EdgeInsets.all(15.0),
       child: FlatButton(
         onPressed: () {
-          if(text.contains("B")){
+          if (text.contains("B")) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => AppointmentPage()),
+                  builder: (context) => AppointmentPage(
+                        stylistId:
+                            "${snapshot.data.documents[index].data["email"]}",
+                        stylistName:
+                            "${snapshot.data.documents[index].data["fullname"]}",
+                      )),
             );
           }
         },
@@ -238,8 +256,6 @@ class StylistPageState extends State<StylistPage> {
     );
   }
 }
-
-
 
 Widget starReview() {
   return Container(

@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import './login.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
 class CRUDMethods {
   final bool stylist = true;
   FirebaseMessaging firebaseMessaging = FirebaseMessaging();
@@ -48,7 +47,7 @@ class CRUDMethods {
       'address': address,
       'category': category,
     }).then((f) => Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => LoginPage()))
+        context, MaterialPageRoute(builder: (context) => LoginPage()))
         .then((f) {}));
     print(" ref is ${ref.documentID}");
   }
@@ -74,7 +73,7 @@ class CRUDMethods {
       'stylist': true,
       'photoUrl': imageUrl,
     }).then((f) => Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => LoginPage()))
+        context, MaterialPageRoute(builder: (context) => LoginPage()))
         .then((f) {}));
     print(" ref is ${ref.documentID}");
   }
@@ -126,18 +125,19 @@ class CRUDMethods {
   }
 
   Future<void> addAppointment(
-    DateTime dateCreated,
-    String appointmentDate,
-    String appointmentStatus,
-    String appointmentTime,
-    String uid,
-    String stylistId,
-    String style,
-    String service,
-  ) async {
+      DateTime dateCreated,
+      String appointmentDate,
+      String appointmentStatus,
+      String appointmentTime,
+      String uid,
+      String stylistId,
+      String style,
+      String service,
+      String stylistName
+      ) async {
     if (isLoggedIn() && uid != stylistId) {
       DocumentReference reference =
-          await Firestore.instance.collection("appointment").add({
+      await Firestore.instance.collection("appointment").add({
         "Date_created": dateCreated,
         "appointment_date": appointmentDate,
         "appointment_status": appointmentStatus,
@@ -146,6 +146,7 @@ class CRUDMethods {
         "servcice_id": style,
         "service_type": service,
         "stylist_id": stylistId,
+        "stylist_name":stylistName
       });
     } else {
       return null;
@@ -164,7 +165,7 @@ class CRUDMethods {
           .collection('tokens')
           .document(fcmToken);
       await tokenRef.setData({'token':fcmToken,
-      'createdOn': FieldValue.serverTimestamp(),
+        'createdOn': FieldValue.serverTimestamp(),
       });
     }
   }

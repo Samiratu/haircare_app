@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import './src/login.dart';
-//import './src/stylist.dart';
+//import './src/profile.dart';
 
 void main() => runApp(MyApp());
 
