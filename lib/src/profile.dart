@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './stylist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import './appointment.dart';
 
 class ProfilePage extends StatefulWidget {
   final String stylistName;
@@ -201,7 +202,17 @@ class _ProfilePageState extends State<ProfilePage> {
           borderRadius: BorderRadius.circular(25.0), color: Colors.purple),
       margin: EdgeInsets.all(5.0),
       child: FlatButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AppointmentPage(
+                  stylistName:
+                  "${widget.stylistName}",
+                  stylistEmail: "${widget.stylistEmail}",
+                )),
+          );
+        },
         child: Text(
           "Book Me",
           style: TextStyle(color: Colors.white, fontSize: 11.0),
@@ -302,20 +313,27 @@ class _ProfilePageState extends State<ProfilePage> {
   void dialogImage() {}
 
   void updateName() async {
+    String id = await updateNam();
    await  Firestore.instance.collection('users')
-        .document('-Lk9Ib34kMAgOth9gE1Z')
+        .document(id)
         .updateData({'fullname': '${newName.text}'}).catchError((e){
           print(e.toString());
    });
   }
 
+
+   updateNam() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    var docs = await Firestore.instance.collection('users').where("uid", isEqualTo:  user.uid).getDocuments();
+    var d = docs.documents;
+    var user1 = d[0];
+    return user1.documentID;
+  }
   void updateContact() async {
-    final documentReference = Firestore.instance
-        .collection("users")
-        .where("email", isEqualTo: widget.stylistEmail);
-    Firestore.instance
-        .document("$documentReference")
-        .updateData({'phone': '$newPhone', 'address': '$newAddress'});
+//    DocumentReference documentReference = await Firestore.instance.document("")
+//    Firestore.instance
+//        .document("$documentReference")
+//        .updateData({'phone': '$newPhone', 'address': '$newAddress'});
   }
 
   loginStylist() {

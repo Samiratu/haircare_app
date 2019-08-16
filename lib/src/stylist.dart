@@ -96,121 +96,131 @@ class StylistPageState extends State<StylistPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ProfilePage()),
-                              );
-                            },
-                            child: Container(
-                              child: CircleAvatar(
-                                  radius: 47.0,
-                                  backgroundColor: Colors.purple,
-                                  child: ClipOval(
-                                    child: SizedBox(
-                                      width: 90.0,
-                                      height: 90.0,
-                                      child: (snapshot.data.documents[index]
-                                                  .data["photoUrl"] !=
-                                              null)
-                                          ? Image.network(
-                                              "${snapshot.data.documents[index].data["photoUrl"]}",
-                                              fit: BoxFit.fill,
-                                            )
-                                          : Image.asset('images/profile.jpg',
-                                              fit: BoxFit.fill),
-                                    ),
-                                  )),
-                            ),
-                          ),
-                          Container(
-                            child: Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.all(3.0),
-                                  child: Text(
-                                    "${snapshot.data.documents[index].data["fullname"]}",
-                                    style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                Container(
-                                  child: Text(
-                                    "${snapshot.data.documents[index].data["category"]}",
-                                    style: TextStyle(
-                                        fontSize: 17.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                                Container(
-                                  child: Text(
-                                    "${snapshot.data.documents[index].data["address"]}",
-                                    style: TextStyle(
-                                      fontSize: 15.0,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(top: 17.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          starReview(),
-                                          starReview(),
-                                          starReview(),
-                                          starReview(),
-                                          starReview(),
-                                        ],
+                          Expanded(
+                            flex: 2,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ProfilePage()),
+                                );
+                              },
+                              child: Container(
+                                child: CircleAvatar(
+                                    radius: 47.0,
+                                    backgroundColor: Colors.purple,
+                                    child: ClipOval(
+                                      child: SizedBox(
+                                        width: 90.0,
+                                        height: 90.0,
+                                        child: (snapshot.data.documents[index]
+                                                    .data["photoUrl"] !=
+                                                null)
+                                            ? Image.network(
+                                                "${snapshot.data.documents[index].data["photoUrl"]}",
+                                                fit: BoxFit.fill,
+                                              )
+                                            : Image.asset('images/profile.jpg',
+                                                fit: BoxFit.fill),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                                    )),
+                              ),
                             ),
                           ),
-                          Container(
-                            child: Column(
-                              children: <Widget>[
-                                button("Book Now", snapshot, index),
-                                Container(
-                                  margin: EdgeInsets.only(left: 7.0),
-                                  width: 80,
-                                  height: 40.0,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.grey,
-                                          width: 1.0,
-                                          style: BorderStyle.solid)),
-                                  child: FlatButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => ProfilePage(
-                                                  stylistName:
-                                                      "${snapshot.data.documents[index].data["fullname"]}",
-                                                  stylistEmail: "${snapshot.data.documents[index].data["email"]}",
-                                                  stylistPhone:
-                                                      "${snapshot.data.documents[index].data["phone"]}",
-                                              stylistAddress: "${snapshot.data.documents[index].data["address"]}",
-                                              stylistUrl: "${snapshot.data.documents[index].data["photoUrl"]}",
-                                                )),
-                                      );
-                                    },
+                          Expanded(
+                            flex: 2,
+                            child: Container(
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
                                     child: Text(
-                                      "View Details",
+                                      "${snapshot.data.documents[index].data["fullname"]}",
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                          fontSize: 8.0,
-                                          fontWeight: FontWeight.bold),
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                  Container(
+                                    child: Text(
+                                      "${snapshot.data.documents[index].data["category"]}",
+                                      style: TextStyle(
+                                          fontSize: 17.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black),
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Text(
+                                      "${snapshot.data.documents[index].data["address"]}",
+                                      style: TextStyle(
+                                        fontSize: 15.0,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 17.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            starReview(),
+                                            starReview(),
+                                            starReview(),
+                                            starReview(),
+                                            starReview(),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Container(
+                              child: Column(
+                                children: <Widget>[
+                                  button("Book Now", snapshot, index),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 7.0),
+                                    width: 80,
+                                    height: 40.0,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.grey,
+                                            width: 1.0,
+                                            style: BorderStyle.solid)),
+                                    child: FlatButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => ProfilePage(
+                                                    stylistName:
+                                                        "${snapshot.data.documents[index].data["fullname"]}",
+                                                    stylistEmail: "${snapshot.data.documents[index].data["email"]}",
+                                                    stylistPhone:
+                                                        "${snapshot.data.documents[index].data["phone"]}",
+                                                stylistAddress: "${snapshot.data.documents[index].data["address"]}",
+                                                stylistUrl: "${snapshot.data.documents[index].data["photoUrl"]}",
+                                                  )),
+                                        );
+                                      },
+                                      child: Text(
+                                        "View Details",
+                                        style: TextStyle(
+                                            fontSize: 8.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -262,7 +272,7 @@ Widget starReview() {
     child: Icon(
       Icons.favorite,
       color: Colors.purple,
-      size: 17.0,
+      size: 14.0,
     ),
   );
 }

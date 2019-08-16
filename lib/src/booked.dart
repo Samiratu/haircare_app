@@ -139,10 +139,4 @@ class BookedPageState extends State<BookedPage> {
     );
   }
 
-//  Future currentEmail() async {
-//    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-//    String uEmail = user.email.toString();
-//    return uEmail;
-//  }
 }
-

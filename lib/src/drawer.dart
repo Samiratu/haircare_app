@@ -4,6 +4,7 @@ import './login.dart';
 import './booked.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+
 class DrawerPage extends StatefulWidget {
   @override
   _DrawerPageState createState() => _DrawerPageState();
@@ -99,7 +100,7 @@ class _DrawerPageState extends State<DrawerPage> {
 
 void signoutUser(context) {
   FirebaseAuth.instance.signOut().then((f){
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => LoginPage()),
     );

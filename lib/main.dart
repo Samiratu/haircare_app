@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './src/login.dart';
-//import './src/profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import './src/home.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: FirebaseAuth.instance.currentUser() != null?HomePage():LoginPage(),
     );
   }
 }

@@ -21,8 +21,8 @@ class AppointmentPage extends StatefulWidget {
 class _AppointmentPageState extends State<AppointmentPage> {
   final key3 = new GlobalKey<FormState>();
   CRUDMethods crudObject = new CRUDMethods();
-  DateTime currentDate = new DateTime.now();
-  TimeOfDay currentTime = new TimeOfDay.now();
+  DateTime currentDate;
+  TimeOfDay currentTime;
   var services = ["Home service", "Go to stylist"];
   var styles = [
     "Box braids",
@@ -55,7 +55,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
   Future selectDate(BuildContext context) async {
     final DateTime selected = await showDatePicker(
         context: context,
-        initialDate: currentDate,
+        initialDate: DateTime.now(),
         firstDate: DateTime(2019),
         lastDate: DateTime(3000),
         builder: (BuildContext context, Widget child) {
@@ -66,11 +66,10 @@ class _AppointmentPageState extends State<AppointmentPage> {
             ),
           );
         });
-    if (selected != null && selected != currentDate) {
+
       setState(() {
         currentDate = selected;
       });
-    }
   }
 
   Future selectTime() async {
@@ -87,11 +86,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
       },
     );
     setState(() {
-      if (picked != currentTime) {
-        currentTime = picked;
-      }else{
-        return null;
-      }
+      currentTime = picked;
     });
   }
 
@@ -168,7 +163,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
           children: <Widget>[
             Container(
               margin: EdgeInsets.only(top: 20.0),
-              child: Text(new DateFormat.yMMMd().format(currentDate)),
+              child: currentDate == null ? Text("?") : Text(new DateFormat.yMMMd().format(currentDate)),
             ),
             Container(
                 width: 180.0,
@@ -217,7 +212,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
           children: <Widget>[
             Container(
               margin: EdgeInsets.only(top: 20.0),
-              child: Text(TimeOfDay(hour: currentTime.hour, minute: currentTime.minute).toString()),
+              child: currentTime == null?Text("?"): Text(TimeOfDay(hour: currentTime.hour, minute: currentTime.minute).toString()),
             ),
             Container(
               width: 180.0,
@@ -281,7 +276,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
           styleSelected(currentSelected);
         },
         value: selectedStyle,
-        validator: validatename,
+        validator: validateService,
       ),
     );
   }
@@ -316,7 +311,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
           serviceSelected(currentSelected);
         },
         value: selectedService,
-        validator: validatename,
+        validator: validateService,
       ),
     );
   }
@@ -332,18 +327,18 @@ class _AppointmentPageState extends State<AppointmentPage> {
       child: RaisedButton(
         color: Colors.purple,
         onPressed: () {
-          if (key3.currentState.validate()) {
+          if (key3.currentState.validate() && currentDate != null && currentTime != null) {
             updateSubmitted();
             key3.currentState.save();
             if (submitted) {
               createAppointment();
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => ConfirmPage()),
               );
-            } else {
-              return null;
             }
+          }else{
+           return _showAlert(context);
           }
         },
         child: Text(
@@ -371,5 +366,34 @@ class _AppointmentPageState extends State<AppointmentPage> {
         .catchError((e) {
       print(e.toString());
     });
+  }
+
+
+String validateService(String value){
+    if(value == null){
+      return "You must select a service";
+    }else{
+      return null;
+    }
+}
+
+  Future<void> _showAlert(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Warning'),
+          content: const Text(' You must select all fields'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
