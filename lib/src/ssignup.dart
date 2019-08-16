@@ -8,7 +8,6 @@ import './crud.dart';
 
 bool submitted = false;
 
-//  this is the class for the stylist Signup.
 class StylistSignup extends StatefulWidget {
   @override
   createState() {
