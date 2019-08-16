@@ -3,6 +3,8 @@ import './stylist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import './appointment.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class ProfilePage extends StatefulWidget {
   final String stylistName;
@@ -313,7 +315,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void dialogImage() {}
 
   void updateName() async {
-    String id = await updateNam();
+    String id = await getDocumentID();
    await  Firestore.instance.collection('users')
         .document(id)
         .updateData({'fullname': '${newName.text}'}).catchError((e){
@@ -322,7 +324,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
 
-   updateNam() async {
+   getDocumentID() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     var docs = await Firestore.instance.collection('users').where("uid", isEqualTo:  user.uid).getDocuments();
     var d = docs.documents;
@@ -330,10 +332,16 @@ class _ProfilePageState extends State<ProfilePage> {
     return user1.documentID;
   }
   void updateContact() async {
-//    DocumentReference documentReference = await Firestore.instance.document("")
-//    Firestore.instance
-//        .document("$documentReference")
-//        .updateData({'phone': '$newPhone', 'address': '$newAddress'});
+    String id = await getDocumentID();
+    await Firestore.instance.collection('users')
+        .document(id)
+        .updateData({'phone': '${newPhone.text}', 'address': '${newAddress.text}'}).catchError((e){
+          print(e.toString());
+    });
+  }
+
+  void updateImage() async{
+
   }
 
   loginStylist() {

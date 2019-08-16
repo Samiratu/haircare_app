@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'crud.dart';
-import 'package:intl/intl.dart';
 
 class BookedPage extends StatefulWidget {
   @override
@@ -22,6 +21,7 @@ class BookedPageState extends State<BookedPage> {
     super.initState();
     setState(() {
       FirebaseAuth.instance.currentUser().then((user){
+        print(user.email);
         userEmail = user.email;
       });
     });
@@ -43,9 +43,10 @@ class BookedPageState extends State<BookedPage> {
   }
 
   bookedTime() {
-
+//    print("name");
+//  print(userEmail);
     return StreamBuilder(
-      stream: Firestore.instance.collection("appointment").where("customer_email", isEqualTo: userEmail).snapshots(),
+      stream:Firestore.instance.collection("appointment").where("customer_email", isEqualTo: userEmail).snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return LinearProgressIndicator();
