@@ -21,8 +21,10 @@ class BookedPageState extends State<BookedPage> {
     super.initState();
     setState(() {
       FirebaseAuth.instance.currentUser().then((user){
-        print(user.email);
-        userEmail = user.email;
+//        print(user.email);
+       setState(() {
+         userEmail = user.email;
+       });
       });
     });
   }
@@ -44,8 +46,8 @@ class BookedPageState extends State<BookedPage> {
 
   bookedTime() {
 //    print("name");
-//  print(userEmail);
-    return StreamBuilder(
+  print(userEmail);
+    return userEmail!=null? StreamBuilder(
       stream:Firestore.instance.collection("appointment").where("customer_email", isEqualTo: userEmail).snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -137,6 +139,8 @@ class BookedPageState extends State<BookedPage> {
           );
         }
       },
+    ):Container(
+
     );
   }
 

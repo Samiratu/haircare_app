@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import './stylist.dart';
+import './ssignup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import './appointment.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
+import 'package:path/path.dart' as p;
 
 class ProfilePage extends StatefulWidget {
   final String stylistName;
@@ -25,10 +28,13 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  StylistSignup _stylistSignup = StylistSignup();
   final TextEditingController newName = TextEditingController();
   final TextEditingController newPhone = TextEditingController();
   final TextEditingController newAddress = TextEditingController();
   bool isLoginStylist = false;
+  File _imageFile;
+  String imageUrl;
   @override
   void initState() {
     // TODO: implement initState
@@ -95,7 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     size: 40.0,
                                   ),
                                   onPressed: () {
-                                    dialogImage();
+                                    getImageUrl();
                                   }),
                             )
                           : Container()
@@ -339,10 +345,14 @@ class _ProfilePageState extends State<ProfilePage> {
           print(e.toString());
     });
   }
+//
+//  void updateImage() async{
+//     getImageUrl();
+//
+//
+//
+//  }
 
-  void updateImage() async{
-
-  }
 
   loginStylist() {
     FirebaseAuth.instance.currentUser().then((user) {
@@ -353,5 +363,29 @@ class _ProfilePageState extends State<ProfilePage> {
       }
     });
     return false;
+  }
+
+  void getImageUrl() async{
+    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _imageFile = image;
+    });
+    String fileName = p.basename(_imageFile.path);
+    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = reference.putFile(_imageFile);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+
+    fileName = p.basename(_imageFile.path);
+    String downloadAddress = await reference.getDownloadURL();
+    print("Image URL : $downloadAddress");
+    setState(() {
+      imageUrl = downloadAddress.toString();
+    });
+    String id = await getDocumentID();
+    await  Firestore.instance.collection('users')
+        .document(id)
+        .updateData({'photoURL': imageUrl}).catchError((e){
+      print(e.toString());
+    });
   }
 }
