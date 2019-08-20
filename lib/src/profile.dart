@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import './stylist.dart';
-import './ssignup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import './appointment.dart';
@@ -15,23 +14,25 @@ class ProfilePage extends StatefulWidget {
   final String stylistPhone;
   final String stylistAddress;
   final String stylistUrl;
+  final String about;
   const ProfilePage(
       {Key key,
       this.stylistName,
       this.stylistEmail,
       this.stylistPhone,
       this.stylistAddress,
-      this.stylistUrl})
+      this.stylistUrl,
+      this.about})
       : super(key: key);
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  StylistSignup _stylistSignup = StylistSignup();
   final TextEditingController newName = TextEditingController();
   final TextEditingController newPhone = TextEditingController();
   final TextEditingController newAddress = TextEditingController();
+  final TextEditingController newAbout = TextEditingController();
   bool isLoginStylist = false;
   File _imageFile;
   String imageUrl;
@@ -176,7 +177,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           ? Container(
                               child: IconButton(
                                 icon: Icon(Icons.edit),
-                                onPressed: () {},
+                                onPressed: () {
+                                  aboutDialog();
+                                },
                               ),
                             )
                           : Container()
@@ -186,11 +189,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       margin: EdgeInsets.fromLTRB(20.0, 10.0, 12.0, 0.0),
                       width: 150.0,
                       child: Text(
-                        "Sarah C is a very talented stylist who was educated at Capri in New Lenox."
-                        " She does beautiful highlights, ombres, "
-                        "airbrush makeup and but one of her expertise is balayage. "
-                        "She is part of our On Location and In Salon Wedding team "
-                        "all of her brides LOVE her work.",
+                        widget.about,
                         style: TextStyle(
                           fontSize: 17.0,
                         ),
@@ -215,10 +214,9 @@ class _ProfilePageState extends State<ProfilePage> {
             context,
             MaterialPageRoute(
                 builder: (context) => AppointmentPage(
-                  stylistName:
-                  "${widget.stylistName}",
-                  stylistEmail: "${widget.stylistEmail}",
-                )),
+                      stylistName: "${widget.stylistName}",
+                      stylistEmail: "${widget.stylistEmail}",
+                    )),
           );
         },
         child: Text(
@@ -259,7 +257,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     controller: newName,
                     autofocus: true,
                     decoration: new InputDecoration(
-                        labelText: 'Full Name', hintText: 'eg. John Smith'),
+                        labelText: 'Full Name', hintText: widget.stylistName),
                   ),
                 ],
               ),
@@ -292,12 +290,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 TextFormField(
                   controller: newPhone,
                   decoration: new InputDecoration(
-                      labelText: 'Phone Number', hintText: 'eg. 237677204981'),
+                      labelText: 'Phone Number', hintText: widget.stylistPhone),
                 ),
                 TextFormField(
                   controller: newAddress,
                   decoration: new InputDecoration(
-                      labelText: 'Address', hintText: 'eg. Kigali'),
+                      labelText: 'Address', hintText: widget.stylistAddress),
                 ),
               ],
             ),
@@ -318,41 +316,82 @@ class _ProfilePageState extends State<ProfilePage> {
         });
   }
 
-  void dialogImage() {}
+  void aboutDialog() async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              title: Text("Add short bio"),
+              content: ListView(
+                children: <Widget>[
+                  Container(
+                    height: 500.0,
+                    margin: EdgeInsets.only(top: 50.0),
+                    child: TextFormField(
+                      controller: newAbout,
+                      autofocus: true,
+                      maxLines: 12,
+                    ),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                new FlatButton(
+                    child: const Text('CANCEL'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }),
+                new FlatButton(
+                    child: const Text('UPDATE'),
+                    onPressed: () {
+                      updateAbout();
+                      Navigator.pop(context);
+                    })
+              ],
+            );
+        });
+  }
 
   void updateName() async {
     String id = await getDocumentID();
-   await  Firestore.instance.collection('users')
+    await Firestore.instance
+        .collection('users')
         .document(id)
-        .updateData({'fullname': '${newName.text}'}).catchError((e){
-          print(e.toString());
-   });
+        .updateData({'fullname': '${newName.text}'}).catchError((e) {
+      print(e.toString());
+    });
   }
 
 
-   getDocumentID() async {
+  void updateAbout() async {
+    String id = await getDocumentID();
+    await Firestore.instance
+        .collection('users')
+        .document(id)
+        .updateData({'about': '${newAbout.text}'}).catchError((e) {
+      print(e.toString());
+    });
+  }
+  getDocumentID() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    var docs = await Firestore.instance.collection('users').where("uid", isEqualTo:  user.uid).getDocuments();
+    var docs = await Firestore.instance
+        .collection('users')
+        .where("uid", isEqualTo: user.uid)
+        .getDocuments();
     var d = docs.documents;
     var user1 = d[0];
     return user1.documentID;
   }
+
   void updateContact() async {
     String id = await getDocumentID();
-    await Firestore.instance.collection('users')
-        .document(id)
-        .updateData({'phone': '${newPhone.text}', 'address': '${newAddress.text}'}).catchError((e){
-          print(e.toString());
+    await Firestore.instance.collection('users').document(id).updateData({
+      'phone': '${newPhone.text}',
+      'address': '${newAddress.text}'
+    }).catchError((e) {
+      print(e.toString());
     });
   }
-//
-//  void updateImage() async{
-//     getImageUrl();
-//
-//
-//
-//  }
-
 
   loginStylist() {
     FirebaseAuth.instance.currentUser().then((user) {
@@ -365,7 +404,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return false;
   }
 
-  void getImageUrl() async{
+  void getImageUrl() async {
     File image = await ImagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
       _imageFile = image;
@@ -382,9 +421,10 @@ class _ProfilePageState extends State<ProfilePage> {
       imageUrl = downloadAddress.toString();
     });
     String id = await getDocumentID();
-    await  Firestore.instance.collection('users')
+    await Firestore.instance
+        .collection('users')
         .document(id)
-        .updateData({'photoURL': imageUrl}).catchError((e){
+        .updateData({'photoURL': imageUrl}).catchError((e) {
       print(e.toString());
     });
   }

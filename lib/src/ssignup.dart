@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as p;
 import 'dart:io';
 import './signup.dart';
 import './crud.dart';
@@ -24,8 +24,9 @@ class StylistSignupState extends State<StylistSignup> {
   final TextEditingController password = TextEditingController();
   final TextEditingController cpassword = TextEditingController();
   final bool stylist = true;
+  String about = "";
   File _imageFile;
-  String _downloadUrl;
+  String _downloadUrl = "https://firebasestorage.googleapis.com/v0/b/my-hairdressing-project.appspot.com/o/profile.jpg?alt=media&token=2580d9e6-be55-40c3-9bee-eb24dbf2e37a'";
   CRUDMethods crudObject = new CRUDMethods();
   var categories = [
     "Locks",
@@ -188,26 +189,6 @@ class StylistSignupState extends State<StylistSignup> {
                   ),
                   Container(
                     width: 250.0,
-                    padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
-                    child: Text(
-                      "Profile Picture ",
-                      style: textDecor,
-                    ),
-                  ),
-                  Container(
-//                      decoration: boxDecor,
-                      child: FlatButton(
-                        color: Colors.purple,
-                        child: Icon(
-                          Icons.file_upload,
-                          size: 40.0,
-                        ),
-                        onPressed: () {
-                          getImageUrl();
-                        },
-                      )),
-                  Container(
-                    width: 250.0,
                     padding: EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 10.0),
                     child: Text(
                       "Password",
@@ -266,14 +247,16 @@ class StylistSignupState extends State<StylistSignup> {
                           if (key2.currentState.validate()) {
                             key2.currentState.save();
                             crudObject.createStylist(
-                                context,
-                                email.text,
-                                password.text,
-                                fname,
-                                mphone,
-                                address,
-                                _downloadUrl,
-                                selectedCategory);
+                              context,
+                              email.text,
+                              password.text,
+                              fname,
+                              mphone,
+                              address,
+                              _downloadUrl,
+                              about,
+                              selectedCategory,
+                            );
                           } else {
                             return null;
                           }
@@ -295,21 +278,28 @@ class StylistSignupState extends State<StylistSignup> {
     });
   }
 
-  Future getImageUrl() async {
-    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _imageFile = image;
-    });
-    String fileName = basename(_imageFile.path);
-    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
-    StorageUploadTask uploadTask = reference.putFile(_imageFile);
-    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
-
-    fileName = basename(_imageFile.path);
-    String downloadAddress = await reference.getDownloadURL();
-    print("Image URL : $downloadAddress");
-    setState(() {
-      _downloadUrl = downloadAddress.toString();
-    });
-  }
+//  void getImageUrl() async {
+//    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+//    setState(() {
+//      _imageFile = image;
+//    });
+//  }
+//
+//  void uploadImage() async {
+//    String fileName = p.basename(_imageFile.path);
+//    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
+//    StorageUploadTask uploadTask = reference.putFile(_imageFile);
+//    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+//  }
+//
+//  void downloadUrl() async {
+//    String fileName = p.basename(_imageFile.path);
+//    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
+//    fileName = p.basename(_imageFile.path);
+//    String downloadAddress = await reference.getDownloadURL();
+//    print("Image URL : $downloadAddress");
+//    setState(() {
+//      _downloadUrl = downloadAddress.toString();
+//    });
+//  }
 }

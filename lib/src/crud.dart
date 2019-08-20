@@ -61,7 +61,8 @@ class CRUDMethods {
       context,
       String category,
       bool stylist,
-      String imageUrl) async {
+      String imageUrl,
+      String about,) async {
     print("called");
     DocumentReference ref = await Firestore.instance.collection('users').add({
       'uid': uid,
@@ -71,11 +72,13 @@ class CRUDMethods {
       'address': address,
       'category': category,
       'stylist': true,
-      'photoUrl': imageUrl,
-    }).then((f) => Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => LoginPage()))
-        .then((f) {}));
-    print(" ref is ${ref.documentID}");
+      'photoURL': imageUrl,
+      'about':about,
+    }).catchError((e){
+      print(e.toString());
+    });
+//        .then((f) => Navigator.pushReplacement(
+//        context, MaterialPageRoute(builder: (context) => LoginPage())));
   }
 
   Future<FirebaseUser> createUser(
@@ -97,14 +100,14 @@ class CRUDMethods {
     return user;
   }
 
-  Future<FirebaseUser> createStylist(
-      context, String email, String password, name, phone, address, photoUrl,
+  Future createStylist(
+      context, String email, String password, name, phone, address, photoURL,about,
       [String category]) async {
-    FirebaseUser user = await FirebaseAuth.instance
+     FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((user) {
       createDataStylist(user.uid, name.text, email, phone.text, address.text,
-          context, category, stylist, photoUrl);
+          context, category, stylist, photoURL, about);
     }).then(((f){
       saveDeviceToken();
     })).catchError((er) {
@@ -113,7 +116,7 @@ class CRUDMethods {
         showAlert(context);
       }
     });
-    return user;
+
   }
 
   Future getData() async {

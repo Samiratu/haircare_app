@@ -45,7 +45,6 @@ class BookedPageState extends State<BookedPage> {
   }
 
   bookedTime() {
-//    print("name");
   print(userEmail);
     return userEmail!=null? StreamBuilder(
       stream:Firestore.instance.collection("appointment").where("customer_email", isEqualTo: userEmail).snapshots(),

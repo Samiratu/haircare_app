@@ -114,15 +114,10 @@ class StylistPageState extends State<StylistPage> {
                                       child: SizedBox(
                                         width: 90.0,
                                         height: 90.0,
-                                        child: (snapshot.data.documents[index]
-                                                    .data["photoUrl"] !=
-                                                null)
-                                            ? Image.network(
-                                                "${snapshot.data.documents[index].data["photoUrl"]}",
+                                        child:Image.network(
+                                                "${snapshot.data.documents[index].data["photoURL"]}",
                                                 fit: BoxFit.fill,
                                               )
-                                            : Image.asset('images/profile.jpg',
-                                                fit: BoxFit.fill),
                                       ),
                                     )),
                               ),
@@ -207,7 +202,8 @@ class StylistPageState extends State<StylistPage> {
                                                     stylistPhone:
                                                         "${snapshot.data.documents[index].data["phone"]}",
                                                 stylistAddress: "${snapshot.data.documents[index].data["address"]}",
-                                                stylistUrl: "${snapshot.data.documents[index].data["photoUrl"]}",
+                                                stylistUrl: "${snapshot.data.documents[index].data["photoURL"]}",
+                                                about: "${snapshot.data.documents[index].data["about"]}" ,
                                                   )),
                                         );
                                       },
