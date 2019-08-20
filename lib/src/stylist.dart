@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import './crud.dart';
 import './appointment.dart';
 import './drawer.dart';
-
+import './simage.dart';
 class StylistPage extends StatefulWidget {
   @override
   createState() {
@@ -103,7 +103,7 @@ class StylistPageState extends State<StylistPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ProfilePage()),
+                                      builder: (context) => StylistImage(imageUrl: "${snapshot.data.documents[index].data["photoURL"]}",)),
                                 );
                               },
                               child: Container(

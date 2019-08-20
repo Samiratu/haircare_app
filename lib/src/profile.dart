@@ -186,14 +186,43 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                   Container(
-                      margin: EdgeInsets.fromLTRB(20.0, 10.0, 12.0, 0.0),
-                      width: 150.0,
-                      child: Text(
-                        widget.about,
-                        style: TextStyle(
-                          fontSize: 17.0,
+                    margin: EdgeInsets.fromLTRB(20.0, 10.0, 12.0, 0.0),
+                    width: 150.0,
+//                    height: 100.0,
+                    child: Text(
+                      widget.about,
+                      style: TextStyle(
+                        fontSize: 17.0,
+                      ),
+                    ),
+                  ),
+                 !isLoginStylist? Container(
+                    margin: EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          child: Text(
+                            "Rate this stylist",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ))
+                        Container(
+                          margin: EdgeInsets.all(5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              starReview(),
+                              starReview(),
+                              starReview(),
+                              starReview(),
+                              starReview(),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ):Container(),
                 ],
               ),
             ),
@@ -213,10 +242,11 @@ class _ProfilePageState extends State<ProfilePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => AppointmentPage(
-                      stylistName: "${widget.stylistName}",
-                      stylistEmail: "${widget.stylistEmail}",
-                    )),
+              builder: (context) => AppointmentPage(
+                    stylistName: "${widget.stylistName}",
+                    stylistEmail: "${widget.stylistEmail}",
+                  ),
+            ),
           );
         },
         child: Text(
@@ -237,7 +267,7 @@ class _ProfilePageState extends State<ProfilePage> {
       child: FlatButton(
         onPressed: () {},
         child: Text(
-          "My work",
+          "Sample work",
           style: TextStyle(color: Colors.white, fontSize: 11.0),
         ),
       ),
@@ -321,34 +351,34 @@ class _ProfilePageState extends State<ProfilePage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-              title: Text("Add short bio"),
-              content: ListView(
-                children: <Widget>[
-                  Container(
-                    height: 500.0,
-                    margin: EdgeInsets.only(top: 50.0),
-                    child: TextFormField(
-                      controller: newAbout,
-                      autofocus: true,
-                      maxLines: 12,
-                    ),
+            title: Text("Add short bio"),
+            content: ListView(
+              children: <Widget>[
+                Container(
+                  height: 500.0,
+                  margin: EdgeInsets.only(top: 50.0),
+                  child: TextFormField(
+                    controller: newAbout,
+                    autofocus: true,
+                    maxLines: 12,
                   ),
-                ],
-              ),
-              actions: <Widget>[
-                new FlatButton(
-                    child: const Text('CANCEL'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }),
-                new FlatButton(
-                    child: const Text('UPDATE'),
-                    onPressed: () {
-                      updateAbout();
-                      Navigator.pop(context);
-                    })
+                ),
               ],
-            );
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                  child: const Text('CANCEL'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              new FlatButton(
+                  child: const Text('UPDATE'),
+                  onPressed: () {
+                    updateAbout();
+                    Navigator.pop(context);
+                  })
+            ],
+          );
         });
   }
 
@@ -362,7 +392,6 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-
   void updateAbout() async {
     String id = await getDocumentID();
     await Firestore.instance
@@ -372,6 +401,7 @@ class _ProfilePageState extends State<ProfilePage> {
       print(e.toString());
     });
   }
+
   getDocumentID() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     var docs = await Firestore.instance
@@ -427,5 +457,16 @@ class _ProfilePageState extends State<ProfilePage> {
         .updateData({'photoURL': imageUrl}).catchError((e) {
       print(e.toString());
     });
+  }
+
+  Widget starReview() {
+    return Container(
+      margin: EdgeInsets.all(3.0),
+      child: Icon(
+        Icons.favorite_border,
+        color: Colors.purple,
+        size: 20.0,
+      ),
+    );
   }
 }
