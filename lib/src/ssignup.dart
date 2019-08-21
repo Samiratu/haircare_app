@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as p;
-import 'dart:io';
 import './signup.dart';
 import './crud.dart';
 
@@ -23,10 +19,12 @@ class StylistSignupState extends State<StylistSignup> {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   final TextEditingController cpassword = TextEditingController();
+  double averageRating = 0.0;
+  int ratingCount = 0;
   final bool stylist = true;
   String about = "";
-  File _imageFile;
-  String _downloadUrl = "https://firebasestorage.googleapis.com/v0/b/my-hairdressing-project.appspot.com/o/profile.jpg?alt=media&token=2580d9e6-be55-40c3-9bee-eb24dbf2e37a'";
+  String _downloadUrl =
+      "https://firebasestorage.googleapis.com/v0/b/my-hairdressing-project.appspot.com/o/profile.jpg?alt=media&token=2580d9e6-be55-40c3-9bee-eb24dbf2e37a'";
   CRUDMethods crudObject = new CRUDMethods();
   var categories = [
     "Locks",
@@ -255,6 +253,8 @@ class StylistSignupState extends State<StylistSignup> {
                               address,
                               _downloadUrl,
                               about,
+                              ratingCount,
+                              averageRating,
                               selectedCategory,
                             );
                           } else {
@@ -277,29 +277,4 @@ class StylistSignupState extends State<StylistSignup> {
       this.selectedCategory = currentSelected;
     });
   }
-
-//  void getImageUrl() async {
-//    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
-//    setState(() {
-//      _imageFile = image;
-//    });
-//  }
-//
-//  void uploadImage() async {
-//    String fileName = p.basename(_imageFile.path);
-//    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
-//    StorageUploadTask uploadTask = reference.putFile(_imageFile);
-//    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
-//  }
-//
-//  void downloadUrl() async {
-//    String fileName = p.basename(_imageFile.path);
-//    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
-//    fileName = p.basename(_imageFile.path);
-//    String downloadAddress = await reference.getDownloadURL();
-//    print("Image URL : $downloadAddress");
-//    setState(() {
-//      _downloadUrl = downloadAddress.toString();
-//    });
-//  }
 }

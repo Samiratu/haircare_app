@@ -5,6 +5,7 @@ import './crud.dart';
 import './appointment.dart';
 import './drawer.dart';
 import './simage.dart';
+
 class StylistPage extends StatefulWidget {
   @override
   createState() {
@@ -103,7 +104,10 @@ class StylistPageState extends State<StylistPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => StylistImage(imageUrl: "${snapshot.data.documents[index].data["photoURL"]}",)),
+                                      builder: (context) => StylistImage(
+                                            imageUrl:
+                                                "${snapshot.data.documents[index].data["photoURL"]}",
+                                          )),
                                 );
                               },
                               child: Container(
@@ -112,13 +116,12 @@ class StylistPageState extends State<StylistPage> {
                                     backgroundColor: Colors.purple,
                                     child: ClipOval(
                                       child: SizedBox(
-                                        width: 90.0,
-                                        height: 90.0,
-                                        child:Image.network(
-                                                "${snapshot.data.documents[index].data["photoURL"]}",
-                                                fit: BoxFit.fill,
-                                              )
-                                      ),
+                                          width: 90.0,
+                                          height: 90.0,
+                                          child: Image.network(
+                                            "${snapshot.data.documents[index].data["photoURL"]}",
+                                            fit: BoxFit.fill,
+                                          )),
                                     )),
                               ),
                             ),
@@ -133,8 +136,8 @@ class StylistPageState extends State<StylistPage> {
                                       "${snapshot.data.documents[index].data["fullname"]}",
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold,
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),
@@ -186,25 +189,39 @@ class StylistPageState extends State<StylistPage> {
                                     width: 80,
                                     height: 40.0,
                                     decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.grey,
-                                            width: 1.0,
-                                            style: BorderStyle.solid)),
+                                      border: Border.all(
+                                          color: Colors.grey,
+                                          width: 1.0,
+                                          style: BorderStyle.solid),
+                                    ),
                                     child: FlatButton(
                                       onPressed: () {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => ProfilePage(
-                                                    stylistName:
-                                                        "${snapshot.data.documents[index].data["fullname"]}",
-                                                    stylistEmail: "${snapshot.data.documents[index].data["email"]}",
-                                                    stylistPhone:
-                                                        "${snapshot.data.documents[index].data["phone"]}",
-                                                stylistAddress: "${snapshot.data.documents[index].data["address"]}",
-                                                stylistUrl: "${snapshot.data.documents[index].data["photoURL"]}",
-                                                about: "${snapshot.data.documents[index].data["about"]}" ,
-                                                  )),
+                                            builder: (context) => ProfilePage(
+                                                  stylistName:
+                                                      "${snapshot.data.documents[index].data["fullname"]}",
+                                                  stylistEmail:
+                                                      "${snapshot.data.documents[index].data["email"]}",
+                                                  stylistPhone:
+                                                      "${snapshot.data.documents[index].data["phone"]}",
+                                                  stylistAddress:
+                                                      "${snapshot.data.documents[index].data["address"]}",
+                                                  stylistUrl:
+                                                      "${snapshot.data.documents[index].data["photoURL"]}",
+                                                  about:
+                                                      "${snapshot.data.documents[index].data["about"]}",
+                                                  ratingCount: snapshot
+                                                      .data
+                                                      .documents[index]
+                                                      .data["ratingCount"],
+                                                  averageRating: snapshot
+                                                      .data
+                                                      .documents[index]
+                                                      .data["ratingCount"],
+                                                ),
+                                          ),
                                         );
                                       },
                                       child: Text(

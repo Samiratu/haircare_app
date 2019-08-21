@@ -28,7 +28,7 @@ class StylistImage extends StatelessWidget {
         margin: EdgeInsets.all(10.0),
         child: Image.network(
           "$imageUrl",
-          fit: BoxFit.cover,
+          fit: BoxFit.contain,
         ),
       ),
     );

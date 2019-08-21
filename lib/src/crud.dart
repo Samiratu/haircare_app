@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import './login.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+
 class CRUDMethods {
   final bool stylist = true;
   FirebaseMessaging firebaseMessaging = FirebaseMessaging();
@@ -47,22 +48,23 @@ class CRUDMethods {
       'address': address,
       'category': category,
     }).then((f) => Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => LoginPage()))
+            context, MaterialPageRoute(builder: (context) => LoginPage()))
         .then((f) {}));
     print(" ref is ${ref.documentID}");
   }
 
   void createDataStylist(
-      String uid,
-      String name,
-      String email,
-      String phone,
-      String address,
-      context,
-      String category,
-      bool stylist,
-      String imageUrl,
-      String about,) async {
+    String uid,
+    String name,
+    String email,
+    String phone,
+    String address,
+    context,
+    String category,
+    bool stylist,
+    String imageUrl,
+    String about, int ratingCount, double averageRating,
+  ) async {
     print("called");
     DocumentReference ref = await Firestore.instance.collection('users').add({
       'uid': uid,
@@ -73,12 +75,12 @@ class CRUDMethods {
       'category': category,
       'stylist': true,
       'photoURL': imageUrl,
-      'about':about,
-    }).catchError((e){
-      print(e.toString());
-    });
-//        .then((f) => Navigator.pushReplacement(
-//        context, MaterialPageRoute(builder: (context) => LoginPage())));
+      'about': about,
+      'ratingCount':ratingCount,
+      'averageRating':averageRating,
+    }).then((f) => Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => LoginPage()))
+        .then((f) {}));
   }
 
   Future<FirebaseUser> createUser(
@@ -89,7 +91,7 @@ class CRUDMethods {
         .then((user) {
       createDataCustomer(user.uid, name.text, email, phone.text, address.text,
           context, category);
-    }).then(((f){
+    }).then(((f) {
       saveDeviceToken();
     })).catchError((er) {
       if (er.message
@@ -100,15 +102,15 @@ class CRUDMethods {
     return user;
   }
 
-  Future createStylist(
-      context, String email, String password, name, phone, address, photoURL,about,
+  Future createStylist(context, String email, String password, name, phone,
+      address, photoURL, about,ratingCount, rating,
       [String category]) async {
-     FirebaseAuth.instance
+    FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((user) {
       createDataStylist(user.uid, name.text, email, phone.text, address.text,
-          context, category, stylist, photoURL, about);
-    }).then(((f){
+          context, category, stylist, photoURL, about,ratingCount,rating);
+    }).then(((f) {
       saveDeviceToken();
     })).catchError((er) {
       if (er.message
@@ -116,7 +118,6 @@ class CRUDMethods {
         showAlert(context);
       }
     });
-
   }
 
   Future getData() async {
@@ -136,11 +137,10 @@ class CRUDMethods {
       String stylistEmail,
       String style,
       String service,
-      String stylistName
-      ) async {
+      String stylistName) async {
     if (isLoggedIn() && customerEmail != stylistEmail) {
       DocumentReference reference =
-      await Firestore.instance.collection("appointment").add({
+          await Firestore.instance.collection("appointment").add({
         "Date_created": dateCreated,
         "appointment_date": appointmentDate,
         "appointment_status": appointmentStatus,
@@ -149,11 +149,25 @@ class CRUDMethods {
         "servcice_id": style,
         "service_type": service,
         "stylist_email": stylistEmail,
-        "stylist_name":stylistName
+        "stylist_name": stylistName
       });
     } else {
       return null;
     }
+  }
+
+  Future<void> addRating(String stylistID, double rating, context) async {
+    DocumentReference reference =
+        await Firestore.instance.collection("ratings").add(
+      {
+        "rating": rating,
+        "stylistID": stylistID,
+      },
+    ).then((f){
+      Navigator.pop(context);
+        }).catchError((e){
+      print(e.toString());
+        });
   }
 
   saveDeviceToken() async {
@@ -163,11 +177,13 @@ class CRUDMethods {
 //  get token from the device
     String fcmToken = await firebaseMessaging.getToken();
     if (fcmToken != null) {
-      var tokenRef = Firestore.instance.collection('users')
+      var tokenRef = Firestore.instance
+          .collection('users')
           .document(uid)
           .collection('tokens')
           .document(fcmToken);
-      await tokenRef.setData({'token':fcmToken,
+      await tokenRef.setData({
+        'token': fcmToken,
         'createdOn': FieldValue.serverTimestamp(),
       });
     }
