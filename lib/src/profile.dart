@@ -11,24 +11,29 @@ import 'package:rating_bar/rating_bar.dart';
 import './crud.dart';
 
 class ProfilePage extends StatefulWidget {
+  final String stylistID;
   final String stylistName;
   final String stylistEmail;
   final String stylistPhone;
   final String stylistAddress;
   final String stylistUrl;
   final String about;
-   final double ratingCount;
+  final double ratingCount;
+  final double totalRating;
   final double averageRating;
-  const ProfilePage(
-      {Key key,
-      this.stylistName,
-      this.stylistEmail,
-      this.stylistPhone,
-      this.stylistAddress,
-      this.stylistUrl,
-      this.about,
-      this.ratingCount,this.averageRating,})
-      : super(key: key);
+  const ProfilePage({
+    Key key,
+    this.stylistID,
+    this.stylistName,
+    this.stylistEmail,
+    this.stylistPhone,
+    this.stylistAddress,
+    this.stylistUrl,
+    this.about,
+    this.ratingCount,
+    this.totalRating,
+    this.averageRating,
+  }) : super(key: key);
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -39,17 +44,24 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController newPhone = TextEditingController();
   final TextEditingController newAddress = TextEditingController();
   final TextEditingController newAbout = TextEditingController();
-  double _ratingHeart = 0;
-  double count = 0;
-  double rating = 0;
+  double _ratingHeart = 0.0;
+  double count = 0.0;
+  double rating = 0.0;
+  double summedRating = 0.0;
+  double average;
   bool isLoginStylist = false;
   File _imageFile;
   String imageUrl;
+  bool notSubmitted = true;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-//    loginStylist();
+    setState(() {
+      count = widget.ratingCount;
+//      rating = widget.totalRating;
+      summedRating = widget.totalRating;
+    });
   }
 
   @override
@@ -102,7 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                       ),
-                      isLoginStylist
+                      isLoginStylist||loginStylist()
                           ? Padding(
                               padding: EdgeInsets.all(5.0),
                               child: IconButton(
@@ -129,7 +141,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                       ),
-                      isLoginStylist
+                      isLoginStylist||loginStylist()
                           ? Container(
                               child: IconButton(
                                 icon: Icon(Icons.edit),
@@ -150,7 +162,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           style: TextStyle(fontSize: 16.0),
                         ),
                       ),
-                      isLoginStylist
+                      isLoginStylist||loginStylist()
                           ? Container(
                               child: IconButton(
                                 icon: Icon(Icons.edit),
@@ -172,22 +184,28 @@ class _ProfilePageState extends State<ProfilePage> {
                       buttonBook(),
                     ],
                   ),
-                  Container(height: 17.0,),
+                  Container(
+                    height: 17.0,
+                  ),
                   Row(
                     children: <Widget>[
                       Container(
                         margin: EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 0.0),
-                        child: isLoginStylist? Text(
-                          "About me",
-                          style: TextStyle(
-                              fontSize: 22.0, fontWeight: FontWeight.bold),
-                        ): Text(
-                          "About stylist",
-                          style: TextStyle(
-                              fontSize: 22.0, fontWeight: FontWeight.bold),
-                        ),
+                        child: isLoginStylist||loginStylist()
+                            ? Text(
+                                "About me",
+                                style: TextStyle(
+                                    fontSize: 22.0,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : Text(
+                                "About stylist",
+                                style: TextStyle(
+                                    fontSize: 22.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
                       ),
-                      loginStylist() || isLoginStylist
+                      isLoginStylist||loginStylist()
                           ? Container(
                               child: IconButton(
                                 icon: Icon(Icons.edit),
@@ -210,74 +228,100 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                   ),
-                  !isLoginStylist
-                      ?
-                  Card(
-                    child: Container(
-                      margin: EdgeInsets.all(15.0),
-                      child: Form(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(height: 15.0,),
-                            Container(
-                              child: Text(
-                                "Rate this stylist",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 22.0),
+                  isLoginStylist||loginStylist()
+                      ?Container():Card(
+                          child: Container(
+                            margin: EdgeInsets.all(15.0),
+                            child: Form(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                    height: 15.0,
+                                  ),
+                                  Container(
+                                    child: Text(
+                                      "Rate this stylist",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 22.0),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.all(10.0),
+                                    child: RatingBar(
+                                      onRatingChanged: (rating) =>
+                                          setState(() => _ratingHeart = rating),
+                                      filledIcon: Icons.star,
+                                      emptyIcon: Icons.star_border,
+                                      halfFilledIcon: Icons.star_half,
+                                      isHalfAllowed: true,
+                                      filledColor: Colors.purple,
+                                      emptyColor: Colors.purple,
+                                      halfFilledColor: Colors.purple,
+                                      size: 30,
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Text(
+                                      " Rating: $_ratingHeart",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 10.0,
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.all(8.0),
+                                    width: 100.0,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.grey,
+                                          width: 1.0,
+                                          style: BorderStyle.solid),
+                                    ),
+                                    child:notSubmitted ? FlatButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          print("initial $count");
+                                          count = count + 1.0;
+                                          print("newCount $count");
+                                        });
+                                        if (_ratingHeart > 0.0 && notSubmitted) {
+                                          print("my rating: $_ratingHeart");
+                                          setState(() {
+                                            rating = summedRating + _ratingHeart;
+                                            summedRating = summedRating + _ratingHeart;
+                                            average = summedRating / count;
+                                            print("Total: $rating");
+                                            print("average rating $average");
+                                          });
+                                          updateRating();
+                                        }
+                                        setState(() {
+                                          notSubmitted = false;
+                                        });
+                                      },
+                                      child: Text(
+                                        "SUBMIT",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14.0),
+                                      ),
+                                    ):
+                                    Container(
+                                      padding: EdgeInsets.all(10.0),
+                                      child:
+                                      Center(child: Text("Thank you")),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            Container(
-                              margin: EdgeInsets.all(10.0),
-                              child: RatingBar(
-                                onRatingChanged: (rating) =>
-                                    setState(() => _ratingHeart = rating),
-                                filledIcon: Icons.star,
-                                emptyIcon: Icons.star_border,
-                                halfFilledIcon: Icons.star_half,
-                                isHalfAllowed: true,
-                                filledColor: Colors.purple,
-                                emptyColor: Colors.purple,
-                                halfFilledColor: Colors.purple,
-                                size: 30,
-                              ),
-                            ),
-                            Container(
-                              child: Text(" Rating: $_ratingHeart", style: TextStyle(fontWeight: FontWeight.bold,),),
-                            ),
-                            Container(height: 10.0,),
-                            Container(
-                              margin: EdgeInsets.all(8.0),
-                              width: 100.0,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: Colors.grey,
-                                    width: 1.0,
-                                    style: BorderStyle.solid),
-                              ),
-                              child: FlatButton(
-                                onPressed: () {
-                                  setState(() {
-                                    count = widget.ratingCount + 1;
-                                  });
-                                  if(_ratingHeart > 0.0){
-                                    setState(() {
-                                      rating = (widget.averageRating + _ratingHeart)/ widget.ratingCount;
-                                    });
-                                    updateRating();
-
-                                  }
-                                },
-                                child: Text("SUBMIT",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14.0),),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  )
-                      : Container(),
                 ],
               ),
             ),
@@ -448,11 +492,9 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void updateRating() async {
-    String id = await getDocumentID();
-    await Firestore.instance
-        .collection('users')
-        .document(id)
-        .updateData({'ratingCount': count, 'averageRating':rating}).catchError((e) {
+    String id = await getRateDocumentID();
+    await Firestore.instance.collection('users').document(id).updateData(
+        {'ratingCount': count, 'averageRating': average,'totalRating':summedRating}).catchError((e) {
       print(e.toString());
     });
   }
@@ -472,6 +514,16 @@ class _ProfilePageState extends State<ProfilePage> {
     var docs = await Firestore.instance
         .collection('users')
         .where("uid", isEqualTo: user.uid)
+        .getDocuments();
+    var d = docs.documents;
+    var user1 = d[0];
+    return user1.documentID;
+  }
+
+  getRateDocumentID() async {
+    var docs = await Firestore.instance
+        .collection('users')
+        .where("uid", isEqualTo: widget.stylistID)
         .getDocuments();
     var d = docs.documents;
     var user1 = d[0];
@@ -523,5 +575,4 @@ class _ProfilePageState extends State<ProfilePage> {
       print(e.toString());
     });
   }
-
 }

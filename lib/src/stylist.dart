@@ -160,19 +160,17 @@ class StylistPageState extends State<StylistPage> {
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(top: 17.0),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Row(
-                                          children: <Widget>[
-                                            starReview(),
-                                            starReview(),
-                                            starReview(),
-                                            starReview(),
-                                            starReview(),
-                                          ],
-                                        ),
+                                    child: snapshot
+                                        .data
+                                        .documents[index]
+                                        .data["averageRating"] != null ? Row(
+                                      children:  <Widget>[
+                                        displayRating(snapshot
+                                            .data
+                                            .documents[index]
+                                            .data["averageRating"].toInt()),
                                       ],
-                                    ),
+                                    ):Row(),
                                   ),
                                 ],
                               ),
@@ -195,11 +193,13 @@ class StylistPageState extends State<StylistPage> {
                                           style: BorderStyle.solid),
                                     ),
                                     child: FlatButton(
-                                      onPressed: () {
+                                      onPressed:  () {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => ProfilePage(
+                                                  stylistID:
+                                                      "${snapshot.data.documents[index].data["uid"]}",
                                                   stylistName:
                                                       "${snapshot.data.documents[index].data["fullname"]}",
                                                   stylistEmail:
@@ -215,11 +215,18 @@ class StylistPageState extends State<StylistPage> {
                                                   ratingCount: snapshot
                                                       .data
                                                       .documents[index]
-                                                      .data["ratingCount"],
+                                                      .data["ratingCount"]
+                                                      .toDouble(),
+                                                  totalRating: snapshot
+                                                      .data
+                                                      .documents[index]
+                                                      .data["totalRating"]
+                                                      .toDouble(),
                                                   averageRating: snapshot
                                                       .data
                                                       .documents[index]
-                                                      .data["ratingCount"],
+                                                      .data["averageRating"]
+                                                      .toDouble(),
                                                 ),
                                           ),
                                         );
@@ -277,6 +284,76 @@ class StylistPageState extends State<StylistPage> {
         ),
       ),
     );
+  }
+
+  displayRating(rate) {
+    switch (rate) {
+      case 0:
+        {
+          return Row();
+        }
+        break;
+      case 1:
+        {
+          return
+            Row(
+              children: <Widget>[
+                starReview(),
+              ],
+            );
+        }
+        break;
+      case 2:
+        {
+          return Row(
+            children: <Widget>[
+              starReview(),
+              starReview(),
+            ],
+          );
+        }
+        break;
+      case 3:
+        {
+          return Row(
+            children: <Widget>[
+              starReview(),
+              starReview(),
+              starReview(),
+            ],
+          );
+        }
+        break;
+      case 4:
+        {
+          return Row(
+            children: <Widget>[
+              starReview(),
+              starReview(),
+              starReview(),
+              starReview(),
+            ],
+          );
+        }
+        break;
+      case 5:
+        {
+          return Row(
+            children: <Widget>[
+              starReview(),
+              starReview(),
+              starReview(),
+              starReview(),
+              starReview(),
+            ],
+          );
+        }
+        break;
+      default:{
+        return Container();
+      }
+      break;
+    }
   }
 }
 

@@ -20,6 +20,7 @@ class StylistSignupState extends State<StylistSignup> {
   final TextEditingController password = TextEditingController();
   final TextEditingController cpassword = TextEditingController();
   double averageRating = 0.0;
+  double totalRating = 0.0;
   int ratingCount = 0;
   final bool stylist = true;
   String about = "";
@@ -96,6 +97,7 @@ class StylistSignupState extends State<StylistSignup> {
                   Container(
                     decoration: boxDecor,
                     child: TextFormField(
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.all(10.0),
@@ -118,6 +120,7 @@ class StylistSignupState extends State<StylistSignup> {
                   Container(
                     decoration: boxDecor,
                     child: TextFormField(
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.all(10.0),
@@ -255,6 +258,7 @@ class StylistSignupState extends State<StylistSignup> {
                               about,
                               ratingCount,
                               averageRating,
+                              totalRating,
                               selectedCategory,
                             );
                           } else {

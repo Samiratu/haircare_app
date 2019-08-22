@@ -63,7 +63,10 @@ class CRUDMethods {
     String category,
     bool stylist,
     String imageUrl,
-    String about, int ratingCount, double averageRating,
+    String about,
+    int ratingCount,
+    double totalRating,
+    double averageRating,
   ) async {
     print("called");
     DocumentReference ref = await Firestore.instance.collection('users').add({
@@ -76,10 +79,11 @@ class CRUDMethods {
       'stylist': true,
       'photoURL': imageUrl,
       'about': about,
-      'ratingCount':ratingCount,
-      'averageRating':averageRating,
+      'ratingCount': ratingCount,
+      'totalRating': totalRating,
+      'averageRating': averageRating,
     }).then((f) => Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => LoginPage()))
+            context, MaterialPageRoute(builder: (context) => LoginPage()))
         .then((f) {}));
   }
 
@@ -103,13 +107,25 @@ class CRUDMethods {
   }
 
   Future createStylist(context, String email, String password, name, phone,
-      address, photoURL, about,ratingCount, rating,
+      address, photoURL, about, ratingCount, totalRating, rating,
       [String category]) async {
     FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((user) {
-      createDataStylist(user.uid, name.text, email, phone.text, address.text,
-          context, category, stylist, photoURL, about,ratingCount,rating);
+      createDataStylist(
+          user.uid,
+          name.text,
+          email,
+          phone.text,
+          address.text,
+          context,
+          category,
+          stylist,
+          photoURL,
+          about,
+          ratingCount,
+          totalRating,
+          rating);
     }).then(((f) {
       saveDeviceToken();
     })).catchError((er) {
@@ -156,19 +172,6 @@ class CRUDMethods {
     }
   }
 
-  Future<void> addRating(String stylistID, double rating, context) async {
-    DocumentReference reference =
-        await Firestore.instance.collection("ratings").add(
-      {
-        "rating": rating,
-        "stylistID": stylistID,
-      },
-    ).then((f){
-      Navigator.pop(context);
-        }).catchError((e){
-      print(e.toString());
-        });
-  }
 
   saveDeviceToken() async {
 //    get current user
