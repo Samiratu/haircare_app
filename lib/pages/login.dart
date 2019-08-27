@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import './signup.dart';
-import './home.dart';
+import 'package:haircare_app/pages/signup.dart';
+import 'package:haircare_app/pages/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import './crud.dart';
+import 'package:haircare_app/pages/crud.dart';
 
 
 final FirebaseAuth _auth = FirebaseAuth.instance;

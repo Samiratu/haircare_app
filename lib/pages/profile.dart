@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import './stylist.dart';
+import 'package:haircare_app/pages/stylist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import './appointment.dart';
+import 'package:haircare_app/pages/appointment.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
+import './availability.dart';
 import 'package:path/path.dart' as p;
 import 'package:rating_bar/rating_bar.dart';
 import './crud.dart';
@@ -114,7 +115,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                       ),
-                      isLoginStylist||loginStylist()
+                      isLoginStylist || loginStylist()
                           ? Padding(
                               padding: EdgeInsets.all(5.0),
                               child: IconButton(
@@ -141,7 +142,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                       ),
-                      isLoginStylist||loginStylist()
+                      isLoginStylist || loginStylist()
                           ? Container(
                               child: IconButton(
                                 icon: Icon(Icons.edit),
@@ -162,7 +163,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           style: TextStyle(fontSize: 16.0),
                         ),
                       ),
-                      isLoginStylist||loginStylist()
+                      isLoginStylist || loginStylist()
                           ? Container(
                               child: IconButton(
                                 icon: Icon(Icons.edit),
@@ -191,7 +192,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: <Widget>[
                       Container(
                         margin: EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 0.0),
-                        child: isLoginStylist||loginStylist()
+                        child: isLoginStylist || loginStylist()
                             ? Text(
                                 "About me",
                                 style: TextStyle(
@@ -205,7 +206,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     fontWeight: FontWeight.bold),
                               ),
                       ),
-                      isLoginStylist||loginStylist()
+                      isLoginStylist || loginStylist()
                           ? Container(
                               child: IconButton(
                                 icon: Icon(Icons.edit),
@@ -228,8 +229,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                   ),
-                  isLoginStylist||loginStylist()
-                      ?Container():Card(
+                  isLoginStylist || loginStylist()
+                      ? Container()
+                      : Card(
                           child: Container(
                             margin: EdgeInsets.all(15.0),
                             child: Form(
@@ -282,40 +284,40 @@ class _ProfilePageState extends State<ProfilePage> {
                                           width: 1.0,
                                           style: BorderStyle.solid),
                                     ),
-                                    child:notSubmitted ? FlatButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          print("initial $count");
-                                          count = count + 1.0;
-                                          print("newCount $count");
-                                        });
-                                        if (_ratingHeart > 0.0 && notSubmitted) {
-                                          print("my rating: $_ratingHeart");
-                                          setState(() {
-                                            rating = summedRating + _ratingHeart;
-                                            summedRating = summedRating + _ratingHeart;
-                                            average = summedRating / count;
-                                            print("Total: $rating");
-                                            print("average rating $average");
-                                          });
-                                          updateRating();
-                                        }
-                                        setState(() {
-                                          notSubmitted = false;
-                                        });
-                                      },
-                                      child: Text(
-                                        "SUBMIT",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14.0),
-                                      ),
-                                    ):
-                                    Container(
-                                      padding: EdgeInsets.all(10.0),
-                                      child:
-                                      Center(child: Text("Thank you")),
-                                    ),
+                                    child: notSubmitted
+                                        ? FlatButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                count = count + 1.0;
+                                              });
+                                              if (_ratingHeart > 0.0 &&
+                                                  notSubmitted) {
+                                                setState(() {
+                                                  rating = summedRating +
+                                                      _ratingHeart;
+                                                  summedRating = summedRating +
+                                                      _ratingHeart;
+                                                  average =
+                                                      summedRating / count;
+                                                });
+                                                updateRating();
+                                              }
+                                              setState(() {
+                                                notSubmitted = false;
+                                              });
+                                            },
+                                            child: Text(
+                                              "SUBMIT",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14.0),
+                                            ),
+                                          )
+                                        : Container(
+                                            padding: EdgeInsets.all(10.0),
+                                            child: Center(
+                                                child: Text("Thank you")),
+                                          ),
                                   ),
                                 ],
                               ),
@@ -334,22 +336,19 @@ class _ProfilePageState extends State<ProfilePage> {
       width: 120.0,
       height: 45.0,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25.0), color: Colors.purple),
+          borderRadius: BorderRadius.circular(15.0), color: Colors.purple),
       margin: EdgeInsets.all(5.0),
       child: FlatButton(
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AppointmentPage(
-                    stylistName: "${widget.stylistName}",
-                    stylistEmail: "${widget.stylistEmail}",
-                  ),
+              builder: (context) => AvailablePage(),
             ),
           );
         },
         child: Text(
-          "Book Me",
+          "Book Now",
           style: TextStyle(color: Colors.white, fontSize: 11.0),
         ),
       ),
@@ -361,7 +360,7 @@ class _ProfilePageState extends State<ProfilePage> {
       width: 120.0,
       height: 45.0,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25.0), color: Colors.purple),
+          borderRadius: BorderRadius.circular(15.0), color: Colors.purple),
       margin: EdgeInsets.all(5.0),
       child: FlatButton(
         onPressed: () {},
@@ -410,39 +409,40 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void dialogContact() async {
     return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Update Contact Details"),
-            content: ListView(
-              children: <Widget>[
-                TextFormField(
-                  controller: newPhone,
-                  decoration: new InputDecoration(
-                      labelText: 'Phone Number', hintText: widget.stylistPhone),
-                ),
-                TextFormField(
-                  controller: newAddress,
-                  decoration: new InputDecoration(
-                      labelText: 'Address', hintText: widget.stylistAddress),
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              new FlatButton(
-                  child: const Text('CANCEL'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
-              new FlatButton(
-                  child: const Text('UPDATE'),
-                  onPressed: () {
-                    updateContact();
-                    Navigator.pop(context);
-                  })
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Update Contact Details"),
+          content: ListView(
+            children: <Widget>[
+              TextFormField(
+                controller: newPhone,
+                decoration: new InputDecoration(
+                    labelText: 'Phone Number', hintText: widget.stylistPhone),
+              ),
+              TextFormField(
+                controller: newAddress,
+                decoration: new InputDecoration(
+                    labelText: 'Address', hintText: widget.stylistAddress),
+              ),
             ],
-          );
-        });
+          ),
+          actions: <Widget>[
+            new FlatButton(
+                child: const Text('CANCEL'),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            new FlatButton(
+                child: const Text('UPDATE'),
+                onPressed: () {
+                  updateContact();
+                  Navigator.pop(context);
+                })
+          ],
+        );
+      },
+    );
   }
 
   void aboutDialog() async {
@@ -493,8 +493,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void updateRating() async {
     String id = await getRateDocumentID();
-    await Firestore.instance.collection('users').document(id).updateData(
-        {'ratingCount': count, 'averageRating': average,'totalRating':summedRating}).catchError((e) {
+    await Firestore.instance.collection('users').document(id).updateData({
+      'ratingCount': count,
+      'averageRating': average,
+      'totalRating': summedRating
+    }).catchError((e) {
       print(e.toString());
     });
   }

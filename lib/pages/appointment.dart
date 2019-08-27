@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-import './stylist.dart';
-import './signup.dart';
+import 'package:haircare_app/pages/stylist.dart';
+import 'package:haircare_app/pages/signup.dart';
 import './crud.dart';
 import './confirm.dart';
-import './drawer.dart';
+import 'package:haircare_app/pages/drawer.dart';
 
 bool submitted = false;
 
@@ -13,7 +13,7 @@ class AppointmentPage extends StatefulWidget {
   final String stylistId;
   final String stylistName;
   final String stylistEmail;
-  const AppointmentPage({Key key, this.stylistId, this.stylistName, this.stylistEmail}) : super(key: key);
+  const AppointmentPage({Key key, this.stylistId, this.stylistName, this.stylistEmail,}) : super(key: key);
   @override
   _AppointmentPageState createState() => _AppointmentPageState();
 }

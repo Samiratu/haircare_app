@@ -12,6 +12,7 @@ class DrawerPage extends StatefulWidget {
 
 class _DrawerPageState extends State<DrawerPage> {
   String userIn;
+  String stylistID;
   @override
   void initState() {
     // TODO: implement initState

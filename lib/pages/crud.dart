@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import './login.dart';
+import 'package:haircare_app/pages/login.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class CRUDMethods {
@@ -172,7 +172,9 @@ class CRUDMethods {
     }
   }
 
+  Future<void> addSlot()async{
 
+  }
   saveDeviceToken() async {
 //    get current user
     FirebaseUser user = await FirebaseAuth.instance.currentUser();

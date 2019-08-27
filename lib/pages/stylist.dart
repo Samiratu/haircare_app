@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import './profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import './crud.dart';
-import './appointment.dart';
-import './drawer.dart';
+import 'package:haircare_app/pages/crud.dart';
+import 'package:haircare_app/pages/appointment.dart';
+import 'package:haircare_app/pages/drawer.dart';
 import './simage.dart';
+import './availability.dart';
 
 class StylistPage extends StatefulWidget {
   @override
@@ -160,17 +161,19 @@ class StylistPageState extends State<StylistPage> {
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(top: 17.0),
-                                    child: snapshot
-                                        .data
-                                        .documents[index]
-                                        .data["averageRating"] != null ? Row(
-                                      children:  <Widget>[
-                                        displayRating(snapshot
-                                            .data
-                                            .documents[index]
-                                            .data["averageRating"].toInt()),
-                                      ],
-                                    ):Row(),
+                                    child: snapshot.data.documents[index]
+                                                .data["averageRating"] !=
+                                            null
+                                        ? Row(
+                                            children: <Widget>[
+                                              displayRating(snapshot
+                                                  .data
+                                                  .documents[index]
+                                                  .data["averageRating"]
+                                                  .toInt()),
+                                            ],
+                                          )
+                                        : Row(),
                                   ),
                                 ],
                               ),
@@ -193,7 +196,7 @@ class StylistPageState extends State<StylistPage> {
                                           style: BorderStyle.solid),
                                     ),
                                     child: FlatButton(
-                                      onPressed:  () {
+                                      onPressed: () {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -269,12 +272,8 @@ class StylistPageState extends State<StylistPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => AppointmentPage(
-                        stylistId:
-                            "${snapshot.data.documents[index].data["email"]}",
-                        stylistName:
-                            "${snapshot.data.documents[index].data["fullname"]}",
-                      )),
+                builder: (context) => AvailablePage(stylistId:"${snapshot.data.documents[index].data["uid"]}" ,)
+              ),
             );
           }
         },
@@ -295,12 +294,11 @@ class StylistPageState extends State<StylistPage> {
         break;
       case 1:
         {
-          return
-            Row(
-              children: <Widget>[
-                starReview(),
-              ],
-            );
+          return Row(
+            children: <Widget>[
+              starReview(),
+            ],
+          );
         }
         break;
       case 2:
@@ -349,10 +347,11 @@ class StylistPageState extends State<StylistPage> {
           );
         }
         break;
-      default:{
-        return Container();
-      }
-      break;
+      default:
+        {
+          return Container();
+        }
+        break;
     }
   }
 }
