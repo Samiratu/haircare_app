@@ -172,8 +172,16 @@ class CRUDMethods {
     }
   }
 
-  Future<void> addSlot()async{
+  Future<void> addSlot(
+      String date, String startTime, String endTime, String stylistId) async {
+    DocumentReference reference =
+    await Firestore.instance.collection("slots").add({
+      "date": date,
+      "start_tim": startTime,
+      "end_time": endTime,
+      "stylistId": stylistId,
 
+    });
   }
   saveDeviceToken() async {
 //    get current user

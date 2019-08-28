@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import './slot.dart';
 import './stylist.dart';
 
 class AvailablePage extends StatefulWidget {
@@ -11,8 +12,7 @@ class AvailablePage extends StatefulWidget {
 }
 
 class _AvailablePageState extends State<AvailablePage> {
-  final formatDate = DateFormat("yyyy-MM-dd");
-  final formatTime = DateFormat("HH:mm");
+  final key4 = new GlobalKey<FormState>();
   DateTime date;
   TimeOfDay startTime;
   TimeOfDay endTime;
@@ -92,11 +92,14 @@ class _AvailablePageState extends State<AvailablePage> {
         ),
         centerTitle: true,
         backgroundColor: Colors.purple,
-      ),
+      ), 
       body: availableSlots(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          addSlot();
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SlotPage(stylistId: widget.stylistId,)),
+          );
         },
         child: Icon(
           Icons.add,
@@ -110,10 +113,10 @@ class _AvailablePageState extends State<AvailablePage> {
   availableSlots() {
     return StreamBuilder(
       stream: Firestore.instance
-          .collection("availability")
+          .collection("slots")
           .where(
-            "stylist_id",
-            isEqualTo: "Tusnjassgask",
+            "stylistId",
+            isEqualTo: "Thgjssssshsjdh",
           )
           .snapshots(),
       builder: (context, snapshot) {
@@ -134,8 +137,7 @@ class _AvailablePageState extends State<AvailablePage> {
                         children: <Widget>[
                           Container(
                             child: Text(
-                              ""
-                              " Date: ${snapshot.data.documents[index].data["availabe_date"]}",
+                              " Date: ${snapshot.data.documents[index].data["date"]}",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -157,13 +159,11 @@ class _AvailablePageState extends State<AvailablePage> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10.0),
                               color: Colors.purple),
-//                          color: Colors.purple,
                           child: FlatButton(
                               onPressed: () {},
                               child: Text(
                                 "Book",
                                 style: TextStyle(
-//                                  color: Colors.white,
                                   fontSize: 18.0,
                                 ),
                               )),
@@ -176,189 +176,6 @@ class _AvailablePageState extends State<AvailablePage> {
             },
           );
         }
-      },
-    );
-  }
-
-  Widget dateField() {
-    return Container(
-      width: 200.0,
-      height: 130.0,
-      decoration: BoxDecoration(
-        border: Border.all(
-            color: Colors.purple, width: 1.0, style: BorderStyle.solid),
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      margin: EdgeInsets.all(10.0),
-      child: Card(
-        child: Column(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(top: 20.0),
-              child: date == null ? Text("?") : Text(new DateFormat.yMMMd().format(date)),
-            ),
-            Container(
-                width: 180.0,
-                height: 40.0,
-                margin: EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),
-                child: RaisedButton(
-                    color: Colors.purple,
-                    onPressed: () {
-                      selectDate(context);
-                    },
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          "Select Date",
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Icon(
-                            Icons.calendar_today,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    )))
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget startTimeField() {
-    return Container(
-      width: 200.0,
-      height: 130.0,
-      decoration: BoxDecoration(
-        border: Border.all(
-            color: Colors.purple, width: 1.0, style: BorderStyle.solid),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      margin: EdgeInsets.all(15.0),
-      child: Card(
-        child: Column(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(top: 20.0),
-              child: startTime == null?Text("?"): Text(TimeOfDay(hour: startTime.hour, minute: startTime.minute).toString()),
-            ),
-            Container(
-              width: 180.0,
-              height: 40.0,
-              margin: EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),
-              child: RaisedButton(
-                color: Colors.purple,
-                onPressed: () {
-                  selectStartTime();
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text(
-                      "Start Time",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    Icon(
-                      Icons.watch_later,
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget endTimeField() {
-    return Container(
-      width: 200.0,
-      height: 130.0,
-      decoration: BoxDecoration(
-        border: Border.all(
-            color: Colors.purple, width: 1.0, style: BorderStyle.solid),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      margin: EdgeInsets.all(15.0),
-      child: Card(
-        child: Column(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(top: 20.0),
-              child: endTime == null?Text("?"): Text(TimeOfDay(hour: endTime.hour, minute: endTime.minute).toString()),
-            ),
-            Container(
-              width: 180.0,
-              height: 40.0,
-              margin: EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 0.0),
-              child: RaisedButton(
-                color: Colors.purple,
-                onPressed: () {
-                  selectEndTime();
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text(
-                      "End Time",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    Icon(
-                      Icons.watch_later,
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-
-
-  void addSlot() async{
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Add available time"),
-          content: ListView(
-            children: <Widget>[
-              Form(child: Column(
-                children: <Widget>[
-                  dateField(),
-                  startTimeField(),
-                  endTimeField(),
-                ],
-              ))
-            ],
-          ),
-          actions: <Widget>[
-            new FlatButton(
-                child: const Text('CANCEL'),
-                onPressed: () {
-                  Navigator.pop(context);
-                }),
-            new FlatButton(
-                child: const Text('ADD'),
-                onPressed: () {
-                  Navigator.pop(context);
-                })
-          ],
-        );
       },
     );
   }
