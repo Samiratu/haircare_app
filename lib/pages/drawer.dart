@@ -37,7 +37,7 @@ class _DrawerPageState extends State<DrawerPage> {
             accountEmail: Text('$userIn'),
             currentAccountPicture: Image.asset('images/profile.jpg',),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15.0),
+              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0)),
               color: Colors.purple,
             ),
           ),

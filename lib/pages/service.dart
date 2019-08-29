@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import './drawer.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ServicePage extends StatefulWidget {
   @override
@@ -40,25 +42,72 @@ class ServicePageState extends State<ServicePage> {
             )
           ],
         ),
-        body: OrientationBuilder(builder: (context, orientation) {
-          createTapbar();
-          return GridView.count(
-            crossAxisSpacing: 2.0,
-            mainAxisSpacing: 2.0,
-            crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
-            children: <Widget>[
-              serviceDetails(),
-              serviceDetails(),
-              serviceDetails(),
-              serviceDetails(),
-              serviceDetails(),
-              serviceDetails(),
-              serviceDetails(),
-              serviceDetails(),
-            ],
-          );
-        }),
+        body: services(),
       ),
+    );
+  }
+
+  services() {
+    return StreamBuilder(
+      stream: Firestore.instance.collection("services").snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return LinearProgressIndicator();
+        } else {
+          return GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (context, index) {
+              return Card(
+                child: Stack(
+//                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Image.network(
+                      "${snapshot.data.documents[index].data["image"]}",
+                      fit: BoxFit.fill,
+                    ),
+
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child:
+                      Container(
+                        width: 140.0,
+                        height: 40.0,
+                        decoration: BoxDecoration(
+                            color: Colors.white54,
+                          borderRadius: BorderRadius.only(topRight: Radius.circular(10.0), topLeft: Radius.circular(10.0))
+                        ),
+                        margin: EdgeInsets.only(top: 80.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              child: Text(
+                                "${snapshot.data.documents[index].data["service_name"]}",
+                                style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.purple),
+                              ),
+                            ),
+                            Container(
+                              child: Text(
+                                "${snapshot.data.documents[index].data["service_price"]} RWF",
+                                style: TextStyle(
+                                    fontSize: 16.0, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+      },
     );
   }
 }
@@ -73,7 +122,7 @@ createTapbar() {
       children: <Widget>[
         Container(
           child: FlatButton(
-              onPressed: (){},
+              onPressed: () {},
               child: Text(
                 "Home",
                 style: TextStyle(color: Colors.white, fontSize: 12.0),
