@@ -67,9 +67,9 @@ class _AppointmentPageState extends State<AppointmentPage> {
           );
         });
 
-      setState(() {
-        currentDate = selected;
-      });
+    setState(() {
+      currentDate = selected;
+    });
   }
 
   Future selectTime() async {
@@ -338,7 +338,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
               );
             }
           }else{
-           return _showAlert(context);
+            return _showAlert(context);
           }
         },
         child: Text(
@@ -354,28 +354,28 @@ class _AppointmentPageState extends State<AppointmentPage> {
     String emailC = auth.email;
     crudObject
         .addAppointment(
-            DateTime.now(),
+        DateTime.now(),
         currentDate.toString(),
-            "Pending",
-            currentTime.toString(),
-            emailC,
-            widget.stylistId,
-            selectedStyle,
-            selectedService,
-    widget.stylistName)
+        "Pending",
+        currentTime.toString(),
+        emailC,
+        widget.stylistId,
+        selectedStyle,
+        selectedService,
+        widget.stylistName)
         .catchError((e) {
       print(e.toString());
     });
   }
 
 
-String validateService(String value){
+  String validateService(String value){
     if(value == null){
       return "You must select a service";
     }else{
       return null;
     }
-}
+  }
 
   Future<void> _showAlert(BuildContext context) {
     return showDialog<void>(

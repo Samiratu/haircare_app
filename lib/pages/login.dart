@@ -96,7 +96,7 @@ class LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Container(
-                      // width: 150.0,
+                    // width: 150.0,
                       margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
                       child: FlatButton(
                         child: Text(
@@ -219,7 +219,7 @@ class LoginPageState extends State<LoginPage> {
       context, String email, String password) async {
     FirebaseUser user = await _auth
         .signInWithEmailAndPassword(email: email, password: password)
-    .then((user) { Navigator.pushReplacement(
+        .then((user) { Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => HomePage()),
     ).then((f){
@@ -227,7 +227,7 @@ class LoginPageState extends State<LoginPage> {
         isLoading = false;
       });
     });
-      print(user.email);
+    print(user.email);
     }).catchError((err) {
       setState(() {
         isLoading = false;
