@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import './appointment.dart';
 import './slot.dart';
 import './stylist.dart';
+import './profile.dart';
 
 class AvailablePage extends StatefulWidget {
   final String stylistId;
@@ -16,6 +19,7 @@ class _AvailablePageState extends State<AvailablePage> {
   DateTime date;
   TimeOfDay startTime;
   TimeOfDay endTime;
+  bool isStylist = false;
 
   Future selectDate(BuildContext context) async {
     final DateTime selected = await showDatePicker(
@@ -94,7 +98,7 @@ class _AvailablePageState extends State<AvailablePage> {
         backgroundColor: Colors.purple,
       ), 
       body: availableSlots(),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: isStylist || stylist() ? FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
@@ -106,7 +110,7 @@ class _AvailablePageState extends State<AvailablePage> {
           color: Colors.white,
         ),
         backgroundColor: Colors.purple,
-      ),
+      ): Container(),
     );
   }
 
@@ -116,7 +120,7 @@ class _AvailablePageState extends State<AvailablePage> {
           .collection("slots")
           .where(
             "stylistId",
-            isEqualTo: "Thgjssssshsjdh",
+            isEqualTo: widget.stylistId,
           )
           .snapshots(),
       builder: (context, snapshot) {
@@ -131,13 +135,14 @@ class _AvailablePageState extends State<AvailablePage> {
                 height: 150.0,
                 child: Card(
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Container(
                             child: Text(
-                              " Date: ${snapshot.data.documents[index].data["date"]}",
+                              " Date: ${snapshot.data.documents[index].data["date"].substring(0, 9)}",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -145,7 +150,7 @@ class _AvailablePageState extends State<AvailablePage> {
                           ),
                           Container(
                             child: Text(
-                              " From: ${snapshot.data.documents[index].data["start_time"]} - ${snapshot.data.documents[index].data["end_time"]}",
+                              " From: ${snapshot.data.documents[index].data["start_time"].substring(10, 15)} - ${snapshot.data.documents[index].data["end_time"] .substring(10, 15)}",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -153,7 +158,7 @@ class _AvailablePageState extends State<AvailablePage> {
                           ),
                         ],
                       ),
-                      Padding(
+                      isStylist || stylist() ? Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Container(
                           decoration: BoxDecoration(
@@ -161,14 +166,34 @@ class _AvailablePageState extends State<AvailablePage> {
                               color: Colors.purple),
                           child: FlatButton(
                               onPressed: () {},
-                              child: Text(
+                              child:   Text(
+                                "Edit",
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                ),
+                              )),
+                        ),
+                      ):Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: Colors.purple),
+                          child: FlatButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => AppointmentPage()),
+                                );
+                              },
+                              child:   Text(
                                 "Book",
                                 style: TextStyle(
                                   fontSize: 18.0,
                                 ),
                               )),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -178,5 +203,16 @@ class _AvailablePageState extends State<AvailablePage> {
         }
       },
     );
+  }
+
+  stylist() {
+    FirebaseAuth.instance.currentUser().then((user) {
+      if (user != null && user.uid == widget.stylistId) {
+        setState(() {
+          isStylist = true;
+        });
+      }
+    });
+    return false;
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:haircare_app/pages/signup.dart';
-import 'package:haircare_app/pages/crud.dart';
+import './signup.dart';
+import './crud.dart';
 
 bool submitted = false;
 
@@ -25,7 +25,7 @@ class StylistSignupState extends State<StylistSignup> {
   final bool stylist = true;
   String about = "";
   String _downloadUrl =
-      "https://firebasestorage.googleapis.com/v0/b/my-hairdressing-project.appspot.com/o/profile.jpg?alt=media&token=2580d9e6-be55-40c3-9bee-eb24dbf2e37a";
+      "https://firebasestorage.googleapis.com/v0/b/my-hairdressing-project.appspot.com/o/profile.jpg?alt=media&token=2580d9e6-be55-40c3-9bee-eb24dbf2e37a'";
   CRUDMethods crudObject = new CRUDMethods();
   var categories = [
     "Locks",

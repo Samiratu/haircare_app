@@ -175,12 +175,12 @@ class _SaloonsPageState extends State<SaloonsPage> {
     );
   }
 
- Widget saloonReview() {
+  Widget saloonReview() {
     return Container(
 //      margin: EdgeInsets.only(top: 4.0),
       child: Icon(Icons.star, color: Colors.purple,size: 25.0,),
     );
- }
+  }
 
 }
 

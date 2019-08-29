@@ -40,7 +40,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  CRUDMethods _crudMethods = CRUDMethods();
   final TextEditingController newName = TextEditingController();
   final TextEditingController newPhone = TextEditingController();
   final TextEditingController newAddress = TextEditingController();
@@ -60,7 +59,6 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     setState(() {
       count = widget.ratingCount;
-//      rating = widget.totalRating;
       summedRating = widget.totalRating;
     });
   }
@@ -333,7 +331,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget buttonBook() {
     return Container(
-      width: 120.0,
+      width: 130.0,
       height: 45.0,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.0), color: Colors.purple),
@@ -343,12 +341,16 @@ class _ProfilePageState extends State<ProfilePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AvailablePage(),
+              builder: (context) => AvailablePage(stylistId: widget.stylistID,),
             ),
           );
         },
-        child: Text(
+        child:
+        !isLoginStylist?Text(
           "Book Now",
+          style: TextStyle(color: Colors.white, fontSize: 11.0),
+        ):Text(
+          "Add appointments",
           style: TextStyle(color: Colors.white, fontSize: 11.0),
         ),
       ),

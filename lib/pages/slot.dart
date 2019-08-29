@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import './availability.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import './crud.dart';
 
-bool submitted = false;
 class SlotPage extends StatefulWidget {
   final String stylistId;
-  const SlotPage({Key key, this.stylistId,}) : super(key: key);
+  const SlotPage({
+    Key key,
+    this.stylistId,
+  }) : super(key: key);
   @override
   _SlotPageState createState() => _SlotPageState();
 }
 
 class _SlotPageState extends State<SlotPage> {
-  final key4 = new GlobalKey<FormState>();
+  CRUDMethods _crudMethods = new CRUDMethods();
+  bool submitted = false;
+  bool booked = false;
   DateTime date;
   TimeOfDay startTime;
   TimeOfDay endTime;
@@ -20,6 +26,7 @@ class _SlotPageState extends State<SlotPage> {
       submitted = true;
     });
   }
+
   Future selectDate(BuildContext context) async {
     final DateTime selected = await showDatePicker(
         context: context,
@@ -75,6 +82,7 @@ class _SlotPageState extends State<SlotPage> {
       endTime = pickedTime;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,9 +103,7 @@ class _SlotPageState extends State<SlotPage> {
         title: Text(
           "Create Slots",
           style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 24.0,
-              color: Colors.white),
+              fontWeight: FontWeight.bold, fontSize: 24.0, color: Colors.white),
         ),
         centerTitle: true,
         actions: <Widget>[],
@@ -109,6 +115,7 @@ class _SlotPageState extends State<SlotPage> {
       ),
     );
   }
+
   Widget dateField() {
     return Container(
       width: 200.0,
@@ -124,7 +131,9 @@ class _SlotPageState extends State<SlotPage> {
           children: <Widget>[
             Container(
               margin: EdgeInsets.only(top: 20.0),
-              child: date == null ? Text("?") : Text(new DateFormat.yMMMd().format(date)),
+              child: date == null
+                  ? Text("?")
+                  : Text(new DateFormat.yMMMd("en_US").format(date)),
             ),
             Container(
                 width: 180.0,
@@ -173,7 +182,11 @@ class _SlotPageState extends State<SlotPage> {
           children: <Widget>[
             Container(
               margin: EdgeInsets.only(top: 20.0),
-              child: startTime == null?Text("?"): Text(TimeOfDay(hour: startTime.hour, minute: startTime.minute).toString()),
+              child: startTime == null
+                  ? Text("?")
+                  : Text(
+                      TimeOfDay(hour: startTime.hour, minute: startTime.minute)
+                          .toString()),
             ),
             Container(
               width: 180.0,
@@ -222,7 +235,11 @@ class _SlotPageState extends State<SlotPage> {
           children: <Widget>[
             Container(
               margin: EdgeInsets.only(top: 20.0),
-              child: endTime == null?Text("?"): Text(TimeOfDay(hour: endTime.hour, minute: endTime.minute).toString()),
+              child: endTime == null
+                  ? Text("?")
+                  : Text(
+                      TimeOfDay(hour: endTime.hour, minute: endTime.minute)
+                          .toString()),
             ),
             Container(
               width: 180.0,
@@ -266,7 +283,16 @@ class _SlotPageState extends State<SlotPage> {
       ),
       child: RaisedButton(
         color: Colors.purple,
-        onPressed: () {},
+        onPressed: () {
+          if (date != null && startTime != null && endTime != null) {
+            updateSubmitted();
+            if (submitted) {
+              _crudMethods.addSlot(date.toString(), startTime.toString(), endTime.toString(), widget.stylistId, booked);
+            }else{
+              print("already submitted");
+            }
+          }
+        },
         child: Text(
           "Submit",
           style: TextStyle(color: Colors.white),
@@ -275,19 +301,15 @@ class _SlotPageState extends State<SlotPage> {
     );
   }
 
-  Widget slotForm(){
+  Widget slotForm() {
     return Form(
-        key: key4,
         child: Column(
-          children: <Widget>[
-            dateField(),
-            startTimeField(),
-            endTimeField(),
-            submitField(),
-          ],
-        ));
-
+      children: <Widget>[
+        dateField(),
+        startTimeField(),
+        endTimeField(),
+        submitField(),
+      ],
+    ));
   }
-
-
 }

@@ -3,6 +3,7 @@ import './profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:haircare_app/pages/crud.dart';
 import 'package:haircare_app/pages/appointment.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:haircare_app/pages/drawer.dart';
 import './simage.dart';
 import './availability.dart';
@@ -16,6 +17,7 @@ class StylistPage extends StatefulWidget {
 
 class StylistPageState extends State<StylistPage> {
   CRUDMethods crudObject = new CRUDMethods();
+  ProfilePage _profilePage = new ProfilePage();
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
   String stylistName;
   String stylistCategory;
@@ -184,7 +186,7 @@ class StylistPageState extends State<StylistPage> {
                             child: Container(
                               child: Column(
                                 children: <Widget>[
-                                  button("Book Now", snapshot, index),
+                                  buttonBook( snapshot, index),
                                   Container(
                                     margin: EdgeInsets.only(left: 7.0),
                                     width: 80,
@@ -281,6 +283,32 @@ class StylistPageState extends State<StylistPage> {
           text,
           style: TextStyle(color: Colors.white, fontSize: 10.0),
         ),
+      ),
+    );
+  }
+
+
+  Widget buttonBook(snapshot, index) {
+    return Container(
+      width: 80.0,
+      height: 40.0,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0), color: Colors.purple),
+      margin: EdgeInsets.all(15.0),
+      child: FlatButton(
+        onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AvailablePage(stylistId:"${snapshot.data.documents[index].data["uid"]}" ,)
+              ),
+            );
+
+        },
+        child:Text(
+          "Book Now",
+          style: TextStyle(color: Colors.white, fontSize: 10.0),
+        )
       ),
     );
   }

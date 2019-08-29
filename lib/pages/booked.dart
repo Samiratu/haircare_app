@@ -14,22 +14,19 @@ class BookedPageState extends State<BookedPage> {
   String userEmail;
   QuerySnapshot appoints;
   CRUDMethods crudObject = new CRUDMethods();
-  bool userIsStylist= false;
-  bool userIsCustomer=false;
 
   @override
-  void initState(){
+  void initState() {
     // TODO: implement initState
     super.initState();
     setState(() {
-      FirebaseAuth.instance.currentUser().then((user) {
+      FirebaseAuth.instance.currentUser().then((user){
+//        print(user.email);
         setState(() {
           userEmail = user.email;
-          stylistUser();
         });
       });
     });
-
   }
 
   @override
@@ -49,121 +46,101 @@ class BookedPageState extends State<BookedPage> {
 
   bookedTime() {
     print(userEmail);
-    return userEmail != null
-        ? StreamBuilder(
-            stream: userIsStylist? Firestore.instance
-                .collection("appointment")
-                .where("stylist_email", isEqualTo: userEmail)
-                .snapshots(): Firestore.instance
-                .collection("appointment")
-                .where("customer_email", isEqualTo: userEmail)
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return LinearProgressIndicator();
-              } else {
-                return ListView.builder(
-                  itemCount: snapshot.data.documents.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.all(30.0),
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            height: 500.0,
-                            width: 370.0,
-                            child: Card(
-                              color: Colors.white,
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  Container(
-                                    child: ListTile(
-                                      leading: Icon(
-                                        Icons.date_range,
-                                        color: Colors.purple,
-                                        size: 30,
-                                      ),
-                                      title: Text(
-                                          "${snapshot.data.documents[index].data["appointment_date"]}"),
-                                    ),
-                                  ),
-                                  Container(
-                                    child: ListTile(
-                                      leading: Icon(
-                                        Icons.access_time,
-                                        color: Colors.purple,
-                                        size: 30,
-                                      ),
-                                      title: Text(
-                                          "${snapshot.data.documents[index].data["appointment_time"]}"),
-                                    ),
-                                  ),
-                                  Container(
-                                    child: ListTile(
-                                      leading: Text(
-                                        "Stylist",
-                                        style: TextStyle(
-                                          fontSize: 16.0,
-                                          color: Colors.purple,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      title: Text(
-                                          "${snapshot.data.documents[index].data["stylist_name"]}"),
-                                    ),
-                                  ),
-                                  Container(
-                                    child: ListTile(
-                                      leading: Text(
-                                        "Service",
-                                        style: TextStyle(
-                                          fontSize: 16.0,
-                                          color: Colors.purple,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      title: Text("Home service"),
-                                    ),
-                                  ),
-                                  Container(
-                                    child: ListTile(
-                                      leading: Text(
-                                        "Status",
-                                        style: TextStyle(
-                                          fontSize: 16.0,
-                                          color: Colors.purple,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      title: Text(
-                                          "${snapshot.data.documents[index].data["appointment_status"]}"),
-                                    ),
-                                  )
-                                ],
+    return userEmail!=null? StreamBuilder(
+      stream:Firestore.instance.collection("appointment").where("customer_email", isEqualTo: userEmail).snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return LinearProgressIndicator();
+        } else {
+          return ListView.builder(
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (context, index){
+              return Container(
+                margin: EdgeInsets.all(30.0),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: 500.0,
+                      width: 370.0,
+                      child: Card(
+                        color: Colors.white,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Container(
+                              child: ListTile(
+                                leading: Icon(
+                                  Icons.date_range,
+                                  color: Colors.purple,
+                                  size: 30,
+                                ),
+                                title: Text("${snapshot.data.documents[index].data["appointment_date"]}"),
                               ),
                             ),
-                          ),
-                        ],
+                            Container(
+                              child: ListTile(
+                                leading: Icon(
+                                  Icons.access_time,
+                                  color: Colors.purple,
+                                  size: 30,
+                                ),
+                                title: Text("${snapshot.data.documents[index].data["appointment_time"]}"),
+                              ),
+                            ),
+                            Container(
+                              child: ListTile(
+                                leading: Text(
+                                  "Stylist",
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.purple,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                title: Text("${snapshot.data.documents[index].data["stylist_name"]}"),
+                              ),
+                            ),
+                            Container(
+                              child: ListTile(
+                                leading: Text(
+                                  "Service",
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.purple,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                title: Text("Home service"),
+                              ),
+                            ),
+                            Container(
+                              child: ListTile(
+                                leading: Text(
+                                  "Status",
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.purple,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                title: Text("${snapshot.data.documents[index].data["appointment_status"]}"),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    );
-                  },
-                );
-              }
+                    ),
+                  ],
+                ),
+              );
+
             },
-          )
-        : Container();
+          );
+        }
+      },
+    ):Container(
+
+    );
   }
 
-  Future stylistUser() async{
-    var document = await Firestore.instance.collection("users").where("email", isEqualTo: userEmail).getDocuments();
-    var d = document.documents;
-    var userDocument = d[0];
-    if (userDocument["stylist"]== true){
-      setState(() {
-        userIsStylist = true;
-      });
-    }
-  }
 }
