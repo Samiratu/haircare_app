@@ -186,7 +186,7 @@ class StylistPageState extends State<StylistPage> {
                             child: Container(
                               child: Column(
                                 children: <Widget>[
-                                  buttonBook( snapshot, index),
+                                  buttonBook(snapshot, index),
                                   Container(
                                     margin: EdgeInsets.only(left: 7.0),
                                     width: 80,
@@ -274,8 +274,14 @@ class StylistPageState extends State<StylistPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => AvailablePage(stylistId:"${snapshot.data.documents[index].data["uid"]}" ,)
-              ),
+                  builder: (context) => AvailablePage(
+                        stylistId:
+                            "${snapshot.data.documents[index].data["uid"]}",
+                        stylistEmail:
+                            "${snapshot.data.documents[index].data["email"]}",
+                        stylistName:
+                            "${snapshot.data.documents[index].data["fullname"]}",
+                      )),
             );
           }
         },
@@ -287,7 +293,6 @@ class StylistPageState extends State<StylistPage> {
     );
   }
 
-
   Widget buttonBook(snapshot, index) {
     return Container(
       width: 80.0,
@@ -296,20 +301,20 @@ class StylistPageState extends State<StylistPage> {
           borderRadius: BorderRadius.circular(10.0), color: Colors.purple),
       margin: EdgeInsets.all(15.0),
       child: FlatButton(
-        onPressed: () {
+          onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => AvailablePage(stylistId:"${snapshot.data.documents[index].data["uid"]}" ,)
-              ),
+                  builder: (context) => AvailablePage(
+                        stylistId:
+                            "${snapshot.data.documents[index].data["uid"]}",
+                      )),
             );
-
-        },
-        child:Text(
-          "Book Now",
-          style: TextStyle(color: Colors.white, fontSize: 10.0),
-        )
-      ),
+          },
+          child: Text(
+            "Book Now",
+            style: TextStyle(color: Colors.white, fontSize: 10.0),
+          )),
     );
   }
 

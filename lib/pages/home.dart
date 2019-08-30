@@ -55,24 +55,42 @@ class HomePageState extends State<HomePage> {
             header(context),
             Card(
               child: Container(
-                height: 130.0,
+                height: 200.0,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage('images/showcase.jpg'),
                       fit: BoxFit.cover),
                 ),
                 child: Align(
-                  child: RaisedButton(
-                    onPressed: () {},
-                    color: Colors.purple,
-                    elevation: 15.0,
-                    child: Text(
-                      "Available Discounts",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 20.0),
+                  height: 160.0,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Container(
+                        color: Colors.white54,
+                        child: Text(
+                          "BEAUTY AT YOUR FINGER TIPS",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 22.0),
+                        ),
+                      ),
+                      Container(
+                        child: RaisedButton(
+                          onPressed: () {},
+                          color: Colors.purple,
+                          child: Text(
+                            " Discounts",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                )),
               ),
             ),
             Card(

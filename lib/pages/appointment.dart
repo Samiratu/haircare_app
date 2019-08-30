@@ -13,7 +13,18 @@ class AppointmentPage extends StatefulWidget {
   final String stylistId;
   final String stylistName;
   final String stylistEmail;
-  const AppointmentPage({Key key, this.stylistId, this.stylistName, this.stylistEmail,}) : super(key: key);
+  final String date;
+  final String startTime;
+  final String endTime;
+  const AppointmentPage(
+      {Key key,
+      this.stylistId,
+      this.stylistName,
+      this.stylistEmail,
+      this.date,
+      this.startTime,
+      this.endTime})
+      : super(key: key);
   @override
   _AppointmentPageState createState() => _AppointmentPageState();
 }
@@ -163,7 +174,9 @@ class _AppointmentPageState extends State<AppointmentPage> {
           children: <Widget>[
             Container(
               margin: EdgeInsets.only(top: 20.0),
-              child: currentDate == null ? Text("?") : Text(new DateFormat.yMMMd().format(currentDate)),
+              child: currentDate == null
+                  ? Text("?")
+                  : Text(new DateFormat.yMMMd().format(currentDate)),
             ),
             Container(
                 width: 180.0,
@@ -212,7 +225,11 @@ class _AppointmentPageState extends State<AppointmentPage> {
           children: <Widget>[
             Container(
               margin: EdgeInsets.only(top: 20.0),
-              child: currentTime == null?Text("?"): Text(TimeOfDay(hour: currentTime.hour, minute: currentTime.minute).toString()),
+              child: currentTime == null
+                  ? Text("?")
+                  : Text(TimeOfDay(
+                          hour: currentTime.hour, minute: currentTime.minute)
+                      .toString()),
             ),
             Container(
               width: 180.0,
@@ -327,7 +344,9 @@ class _AppointmentPageState extends State<AppointmentPage> {
       child: RaisedButton(
         color: Colors.purple,
         onPressed: () {
-          if (key3.currentState.validate() && currentDate != null && currentTime != null) {
+          if (key3.currentState.validate() &&
+              currentDate != null &&
+              currentTime != null) {
             updateSubmitted();
             key3.currentState.save();
             if (submitted) {
@@ -337,7 +356,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 MaterialPageRoute(builder: (context) => ConfirmPage()),
               );
             }
-          }else{
+          } else {
             return _showAlert(context);
           }
         },
@@ -354,25 +373,24 @@ class _AppointmentPageState extends State<AppointmentPage> {
     String emailC = auth.email;
     crudObject
         .addAppointment(
-        DateTime.now(),
-        currentDate.toString(),
-        "Pending",
-        currentTime.toString(),
-        emailC,
-        widget.stylistId,
-        selectedStyle,
-        selectedService,
-        widget.stylistName)
+            DateTime.now(),
+            currentDate.toString(),
+            "Pending",
+            currentTime.toString(),
+            emailC,
+            widget.stylistId,
+            selectedStyle,
+            selectedService,
+            widget.stylistName)
         .catchError((e) {
       print(e.toString());
     });
   }
 
-
-  String validateService(String value){
-    if(value == null){
+  String validateService(String value) {
+    if (value == null) {
       return "You must select a service";
-    }else{
+    } else {
       return null;
     }
   }

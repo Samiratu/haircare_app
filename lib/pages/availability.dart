@@ -9,7 +9,11 @@ import './profile.dart';
 
 class AvailablePage extends StatefulWidget {
   final String stylistId;
-  const AvailablePage({Key key, this.stylistId,}) : super(key: key);
+  final String stylistEmail;
+  final String stylistName;
+  const AvailablePage(
+      {Key key, this.stylistId, this.stylistEmail, this.stylistName})
+      : super(key: key);
   @override
   _AvailablePageState createState() => _AvailablePageState();
 }
@@ -96,21 +100,26 @@ class _AvailablePageState extends State<AvailablePage> {
         ),
         centerTitle: true,
         backgroundColor: Colors.purple,
-      ), 
+      ),
       body: availableSlots(),
-      floatingActionButton: isStylist || stylist() ? FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SlotPage(stylistId: widget.stylistId,)),
-          );
-        },
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.purple,
-      ): Container(),
+      floatingActionButton: isStylist || stylist()
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SlotPage(
+                            stylistId: widget.stylistId,
+                          )),
+                );
+              },
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              backgroundColor: Colors.purple,
+            )
+          : Container(),
     );
   }
 
@@ -150,7 +159,7 @@ class _AvailablePageState extends State<AvailablePage> {
                           ),
                           Container(
                             child: Text(
-                              " From: ${snapshot.data.documents[index].data["start_time"].substring(10, 15)} - ${snapshot.data.documents[index].data["end_time"] .substring(10, 15)}",
+                              " From: ${snapshot.data.documents[index].data["start_time"].substring(10, 15)} - ${snapshot.data.documents[index].data["end_time"].substring(10, 15)}",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -158,42 +167,58 @@ class _AvailablePageState extends State<AvailablePage> {
                           ),
                         ],
                       ),
-                      isStylist || stylist() ? Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              color: Colors.purple),
-                          child: FlatButton(
-                              onPressed: () {},
-                              child:   Text(
-                                "Edit",
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                ),
-                              )),
-                        ),
-                      ):Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              color: Colors.purple),
-                          child: FlatButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => AppointmentPage()),
-                                );
-                              },
-                              child:   Text(
-                                "Book",
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                ),
-                              )),
-                        ),
-                      ),
+                      isStylist || stylist()
+                          ? Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    color: Colors.purple),
+                                child: FlatButton(
+                                    onPressed: () {},
+                                    child: Text(
+                                      "Edit",
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                      ),
+                                    )),
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    color: Colors.purple),
+                                child: FlatButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AppointmentPage(
+                                                  stylistId: widget.stylistId,
+                                                  stylistName:
+                                                      widget.stylistName,
+                                                  stylistEmail:
+                                                      widget.stylistEmail,
+                                                  startTime:
+                                                      "${snapshot.data.documents[index].data["start_time"].substring(10, 15)}",
+                                                  endTime:
+                                                      "${snapshot.data.documents[index].data["end_time"].substring(10, 15)}",
+                                                  date:
+                                                      "${snapshot.data.documents[index].data["date"].substring(0, 9)}",
+                                                )),
+                                      );
+                                    },
+                                    child: Text(
+                                      "Book",
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                      ),
+                                    )),
+                              ),
+                            ),
                     ],
                   ),
                 ),
