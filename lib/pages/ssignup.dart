@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './signup.dart';
 import './crud.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 bool submitted = false;
 
@@ -24,6 +25,7 @@ class StylistSignupState extends State<StylistSignup> {
   int ratingCount = 0;
   final bool stylist = true;
   String about = "";
+  var styles;
   String _downloadUrl =
       "https://firebasestorage.googleapis.com/v0/b/my-hairdressing-project.appspot.com/o/profile.jpg?alt=media&token=2580d9e6-be55-40c3-9bee-eb24dbf2e37a'";
   CRUDMethods crudObject = new CRUDMethods();
@@ -41,6 +43,17 @@ class StylistSignupState extends State<StylistSignup> {
   updateSubmitted() {
     setState(() {
       submitted = true;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Firestore.instance.collection("styles").getDocuments().then((f) {
+      setState(() {
+        styles = f.documents[0].data["style_names"];
+      });
     });
   }
 
@@ -170,6 +183,23 @@ class StylistSignupState extends State<StylistSignup> {
                     width: 250.0,
                     padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
                     child: Text(
+                      "Select styles you do",
+                      style: textDecor,
+                    ),
+                  ),
+                  styles != null
+                      ? Container(
+                          child: Wrap(
+                            spacing: 5.0,
+                            runSpacing: 2.0,
+                            children: allCategories(styles),
+                          ),
+                        )
+                      : LinearProgressIndicator(),
+                  Container(
+                    width: 250.0,
+                    padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
+                    child: Text(
                       "Address",
                       style: textDecor,
                     ),
@@ -276,9 +306,47 @@ class StylistSignupState extends State<StylistSignup> {
     );
   }
 
+  allCategories(styles) {
+    var styleLists = new List<FilterChipWidget>();
+    for (int i = 0; i < styles.length; i++) {
+      styleLists.add(FilterChipWidget(chipName: styles[i]));
+    }
+    return styleLists;
+  }
+
   void itemSelected(String currentSelected) {
     setState(() {
       this.selectedCategory = currentSelected;
     });
+  }
+}
+
+class FilterChipWidget extends StatefulWidget {
+  final String chipName;
+  FilterChipWidget({Key key, this.chipName,})
+      : super(key: key);
+  @override
+  _FilterChipWidgetState createState() => _FilterChipWidgetState();
+}
+
+class _FilterChipWidgetState extends State<FilterChipWidget> {
+  var _isSelected = false;
+  List<String> selectedStyles = List();
+  @override
+  Widget build(BuildContext context) {
+    return FilterChip(
+      label: Text(widget.chipName),
+      selected: _isSelected,
+      onSelected: (isSelected) {
+        setState(() {
+          _isSelected = isSelected;
+        });
+
+          selectedStyles.add(widget.chipName);
+          print(selectedStyles);
+
+
+      },
+    );
   }
 }
