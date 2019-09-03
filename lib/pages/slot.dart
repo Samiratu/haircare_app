@@ -185,8 +185,8 @@ class _SlotPageState extends State<SlotPage> {
               child: startTime == null
                   ? Text("?")
                   : Text(
-                      TimeOfDay(hour: startTime.hour, minute: startTime.minute)
-                          .toString()),
+                  TimeOfDay(hour: startTime.hour, minute: startTime.minute)
+                      .toString()),
             ),
             Container(
               width: 180.0,
@@ -238,8 +238,8 @@ class _SlotPageState extends State<SlotPage> {
               child: endTime == null
                   ? Text("?")
                   : Text(
-                      TimeOfDay(hour: endTime.hour, minute: endTime.minute)
-                          .toString()),
+                  TimeOfDay(hour: endTime.hour, minute: endTime.minute)
+                      .toString()),
             ),
             Container(
               width: 180.0,
@@ -304,12 +304,12 @@ class _SlotPageState extends State<SlotPage> {
   Widget slotForm() {
     return Form(
         child: Column(
-      children: <Widget>[
-        dateField(),
-        startTimeField(),
-        endTimeField(),
-        submitField(),
-      ],
-    ));
+          children: <Widget>[
+            dateField(),
+            startTimeField(),
+            endTimeField(),
+            submitField(),
+          ],
+        ));
   }
 }

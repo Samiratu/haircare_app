@@ -67,6 +67,7 @@ class CRUDMethods {
     int ratingCount,
     double totalRating,
     double averageRating,
+      List<String> styles,
   ) async {
     print("called");
     DocumentReference ref = await Firestore.instance.collection('users').add({
@@ -82,6 +83,7 @@ class CRUDMethods {
       'ratingCount': ratingCount,
       'totalRating': totalRating,
       'averageRating': averageRating,
+      'styles': styles
     }).then((f) => Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => LoginPage()))
         .then((f) {}));
@@ -107,7 +109,7 @@ class CRUDMethods {
   }
 
   Future createStylist(context, String email, String password, name, phone,
-      address, photoURL, about, ratingCount, totalRating, rating,
+      address, photoURL, about, ratingCount, totalRating, rating, List<String> styles,
       [String category]) async {
     FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password)
@@ -125,7 +127,8 @@ class CRUDMethods {
           about,
           ratingCount,
           totalRating,
-          rating);
+          rating,
+      styles);
     }).then(((f) {
       saveDeviceToken();
     })).catchError((er) {

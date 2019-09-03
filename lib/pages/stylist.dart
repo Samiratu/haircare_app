@@ -81,9 +81,9 @@ class StylistPageState extends State<StylistPage> {
       stream: Firestore.instance
           .collection("users")
           .where(
-            "stylist",
-            isEqualTo: true,
-          )
+        "stylist",
+        isEqualTo: true,
+      )
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -108,9 +108,9 @@ class StylistPageState extends State<StylistPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => StylistImage(
-                                            imageUrl:
-                                                "${snapshot.data.documents[index].data["photoURL"]}",
-                                          )),
+                                        imageUrl:
+                                        "${snapshot.data.documents[index].data["photoURL"]}",
+                                      )),
                                 );
                               },
                               child: Container(
@@ -164,17 +164,17 @@ class StylistPageState extends State<StylistPage> {
                                   Container(
                                     margin: EdgeInsets.only(top: 17.0),
                                     child: snapshot.data.documents[index]
-                                                .data["averageRating"] !=
-                                            null
+                                        .data["averageRating"] !=
+                                        null
                                         ? Row(
-                                            children: <Widget>[
-                                              displayRating(snapshot
-                                                  .data
-                                                  .documents[index]
-                                                  .data["averageRating"]
-                                                  .toInt()),
-                                            ],
-                                          )
+                                      children: <Widget>[
+                                        displayRating(snapshot
+                                            .data
+                                            .documents[index]
+                                            .data["averageRating"]
+                                            .toInt()),
+                                      ],
+                                    )
                                         : Row(),
                                   ),
                                 ],
@@ -203,36 +203,36 @@ class StylistPageState extends State<StylistPage> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => ProfilePage(
-                                                  stylistID:
-                                                      "${snapshot.data.documents[index].data["uid"]}",
-                                                  stylistName:
-                                                      "${snapshot.data.documents[index].data["fullname"]}",
-                                                  stylistEmail:
-                                                      "${snapshot.data.documents[index].data["email"]}",
-                                                  stylistPhone:
-                                                      "${snapshot.data.documents[index].data["phone"]}",
-                                                  stylistAddress:
-                                                      "${snapshot.data.documents[index].data["address"]}",
-                                                  stylistUrl:
-                                                      "${snapshot.data.documents[index].data["photoURL"]}",
-                                                  about:
-                                                      "${snapshot.data.documents[index].data["about"]}",
-                                                  ratingCount: snapshot
-                                                      .data
-                                                      .documents[index]
-                                                      .data["ratingCount"]
-                                                      .toDouble(),
-                                                  totalRating: snapshot
-                                                      .data
-                                                      .documents[index]
-                                                      .data["totalRating"]
-                                                      .toDouble(),
-                                                  averageRating: snapshot
-                                                      .data
-                                                      .documents[index]
-                                                      .data["averageRating"]
-                                                      .toDouble(),
-                                                ),
+                                              stylistID:
+                                              "${snapshot.data.documents[index].data["uid"]}",
+                                              stylistName:
+                                              "${snapshot.data.documents[index].data["fullname"]}",
+                                              stylistEmail:
+                                              "${snapshot.data.documents[index].data["email"]}",
+                                              stylistPhone:
+                                              "${snapshot.data.documents[index].data["phone"]}",
+                                              stylistAddress:
+                                              "${snapshot.data.documents[index].data["address"]}",
+                                              stylistUrl:
+                                              "${snapshot.data.documents[index].data["photoURL"]}",
+                                              about:
+                                              "${snapshot.data.documents[index].data["about"]}",
+                                              ratingCount: snapshot
+                                                  .data
+                                                  .documents[index]
+                                                  .data["ratingCount"]
+                                                  .toDouble(),
+                                              totalRating: snapshot
+                                                  .data
+                                                  .documents[index]
+                                                  .data["totalRating"]
+                                                  .toDouble(),
+                                              averageRating: snapshot
+                                                  .data
+                                                  .documents[index]
+                                                  .data["averageRating"]
+                                                  .toDouble(),
+                                            ),
                                           ),
                                         );
                                       },
@@ -275,13 +275,13 @@ class StylistPageState extends State<StylistPage> {
               context,
               MaterialPageRoute(
                   builder: (context) => AvailablePage(
-                        stylistId:
-                            "${snapshot.data.documents[index].data["uid"]}",
-                        stylistEmail:
-                            "${snapshot.data.documents[index].data["email"]}",
-                        stylistName:
-                            "${snapshot.data.documents[index].data["fullname"]}",
-                      )),
+                    stylistId:
+                    "${snapshot.data.documents[index].data["uid"]}",
+                    stylistEmail:
+                    "${snapshot.data.documents[index].data["email"]}",
+                    stylistName:
+                    "${snapshot.data.documents[index].data["fullname"]}",
+                  )),
             );
           }
         },
@@ -306,9 +306,9 @@ class StylistPageState extends State<StylistPage> {
               context,
               MaterialPageRoute(
                   builder: (context) => AvailablePage(
-                        stylistId:
-                            "${snapshot.data.documents[index].data["uid"]}",
-                      )),
+                    stylistId:
+                    "${snapshot.data.documents[index].data["uid"]}",
+                  )),
             );
           },
           child: Text(

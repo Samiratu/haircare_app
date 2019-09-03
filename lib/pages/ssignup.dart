@@ -191,7 +191,7 @@ class StylistSignupState extends State<StylistSignup> {
                       ? Container(
                           child: Wrap(
                             spacing: 5.0,
-                            runSpacing: 2.0,
+                            runSpacing: 3.0,
                             children: allCategories(styles),
                           ),
                         )
@@ -289,6 +289,7 @@ class StylistSignupState extends State<StylistSignup> {
                               ratingCount,
                               averageRating,
                               totalRating,
+                              selectedStyles,
                               selectedCategory,
                             );
                           } else {
@@ -321,6 +322,7 @@ class StylistSignupState extends State<StylistSignup> {
   }
 }
 
+List<String> selectedStyles = List();
 class FilterChipWidget extends StatefulWidget {
   final String chipName;
   FilterChipWidget({Key key, this.chipName,})
@@ -331,7 +333,6 @@ class FilterChipWidget extends StatefulWidget {
 
 class _FilterChipWidgetState extends State<FilterChipWidget> {
   var _isSelected = false;
-  List<String> selectedStyles = List();
   @override
   Widget build(BuildContext context) {
     return FilterChip(
@@ -341,11 +342,8 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
         setState(() {
           _isSelected = isSelected;
         });
-
-          selectedStyles.add(widget.chipName);
+          _isSelected && !selectedStyles.contains(widget.chipName)?selectedStyles.add(widget.chipName): print(selectedStyles.toString());
           print(selectedStyles);
-
-
       },
     );
   }

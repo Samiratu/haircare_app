@@ -75,7 +75,7 @@ class ServicePageState extends State<ServicePage> {
                         height: 40.0,
                         decoration: BoxDecoration(
                             color: Colors.white54,
-                          borderRadius: BorderRadius.only(topRight: Radius.circular(10.0), topLeft: Radius.circular(10.0))
+                            borderRadius: BorderRadius.only(topRight: Radius.circular(10.0), topLeft: Radius.circular(10.0))
                         ),
                         margin: EdgeInsets.only(top: 80.0),
                         child: Column(

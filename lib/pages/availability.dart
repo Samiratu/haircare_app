@@ -104,21 +104,21 @@ class _AvailablePageState extends State<AvailablePage> {
       body: availableSlots(),
       floatingActionButton: isStylist || stylist()
           ? FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SlotPage(
-                            stylistId: widget.stylistId,
-                          )),
-                );
-              },
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              backgroundColor: Colors.purple,
-            )
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SlotPage(
+                  stylistId: widget.stylistId,
+                )),
+          );
+        },
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.purple,
+      )
           : Container(),
     );
   }
@@ -128,9 +128,9 @@ class _AvailablePageState extends State<AvailablePage> {
       stream: Firestore.instance
           .collection("slots")
           .where(
-            "stylistId",
-            isEqualTo: widget.stylistId,
-          )
+        "stylistId",
+        isEqualTo: widget.stylistId,
+      )
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -169,56 +169,56 @@ class _AvailablePageState extends State<AvailablePage> {
                       ),
                       isStylist || stylist()
                           ? Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    color: Colors.purple),
-                                child: FlatButton(
-                                    onPressed: () {},
-                                    child: Text(
-                                      "Edit",
-                                      style: TextStyle(
-                                        fontSize: 18.0,
-                                      ),
-                                    )),
-                              ),
-                            )
+                        padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: Colors.purple),
+                          child: FlatButton(
+                              onPressed: () {},
+                              child: Text(
+                                "Edit",
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                ),
+                              )),
+                        ),
+                      )
                           : Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    color: Colors.purple),
-                                child: FlatButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                AppointmentPage(
-                                                  stylistId: widget.stylistId,
-                                                  stylistName:
-                                                      widget.stylistName,
-                                                  stylistEmail:
-                                                      widget.stylistEmail,
-                                                  startTime:
-                                                      "${snapshot.data.documents[index].data["start_time"].substring(10, 15)}",
-                                                  endTime:
-                                                      "${snapshot.data.documents[index].data["end_time"].substring(10, 15)}",
-                                                  date:
-                                                      "${snapshot.data.documents[index].data["date"].substring(0, 9)}",
-                                                )),
-                                      );
-                                    },
-                                    child: Text(
-                                      "Book",
-                                      style: TextStyle(
-                                        fontSize: 18.0,
-                                      ),
-                                    )),
-                              ),
-                            ),
+                        padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: Colors.purple),
+                          child: FlatButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          AppointmentPage(
+                                            stylistId: widget.stylistId,
+                                            stylistName:
+                                            widget.stylistName,
+                                            stylistEmail:
+                                            widget.stylistEmail,
+                                            startTime:
+                                            "${snapshot.data.documents[index].data["start_time"].substring(10, 15)}",
+                                            endTime:
+                                            "${snapshot.data.documents[index].data["end_time"].substring(10, 15)}",
+                                            date:
+                                            "${snapshot.data.documents[index].data["date"].substring(0, 9)}",
+                                          )),
+                                );
+                              },
+                              child: Text(
+                                "Book",
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                ),
+                              )),
+                        ),
+                      ),
                     ],
                   ),
                 ),

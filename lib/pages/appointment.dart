@@ -18,12 +18,12 @@ class AppointmentPage extends StatefulWidget {
   final String endTime;
   const AppointmentPage(
       {Key key,
-      this.stylistId,
-      this.stylistName,
-      this.stylistEmail,
-      this.date,
-      this.startTime,
-      this.endTime})
+        this.stylistId,
+        this.stylistName,
+        this.stylistEmail,
+        this.date,
+        this.startTime,
+        this.endTime})
       : super(key: key);
   @override
   _AppointmentPageState createState() => _AppointmentPageState();
@@ -228,8 +228,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
               child: currentTime == null
                   ? Text("?")
                   : Text(TimeOfDay(
-                          hour: currentTime.hour, minute: currentTime.minute)
-                      .toString()),
+                  hour: currentTime.hour, minute: currentTime.minute)
+                  .toString()),
             ),
             Container(
               width: 180.0,
@@ -373,15 +373,15 @@ class _AppointmentPageState extends State<AppointmentPage> {
     String emailC = auth.email;
     crudObject
         .addAppointment(
-            DateTime.now(),
-            currentDate.toString(),
-            "Pending",
-            currentTime.toString(),
-            emailC,
-            widget.stylistId,
-            selectedStyle,
-            selectedService,
-            widget.stylistName)
+        DateTime.now(),
+        currentDate.toString(),
+        "Pending",
+        currentTime.toString(),
+        emailC,
+        widget.stylistId,
+        selectedStyle,
+        selectedService,
+        widget.stylistName)
         .catchError((e) {
       print(e.toString());
     });

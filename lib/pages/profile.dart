@@ -85,246 +85,246 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: Builder(
         builder: (context) => Container(
-              child: ListView(
+          child: ListView(
+            children: <Widget>[
+              SizedBox(
+                height: 10.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.center,
-                        child: CircleAvatar(
-                          radius: 75.0,
-                          backgroundColor: Colors.purple,
-                          child: ClipOval(
-                            child: SizedBox(
-                              width: 140.0,
-                              height: 140.0,
-                              child: (widget.stylistUrl != null)
-                                  ? Image.network(
-                                      "${widget.stylistUrl}",
-                                      fit: BoxFit.fill,
-                                    )
-                                  : Image.asset('images/profile.jpg',
-                                      fit: BoxFit.fill),
-                            ),
-                          ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: CircleAvatar(
+                      radius: 75.0,
+                      backgroundColor: Colors.purple,
+                      child: ClipOval(
+                        child: SizedBox(
+                          width: 140.0,
+                          height: 140.0,
+                          child: (widget.stylistUrl != null)
+                              ? Image.network(
+                            "${widget.stylistUrl}",
+                            fit: BoxFit.fill,
+                          )
+                              : Image.asset('images/profile.jpg',
+                              fit: BoxFit.fill),
                         ),
-                      ),
-                      isLoginStylist || loginStylist()
-                          ? Padding(
-                              padding: EdgeInsets.all(5.0),
-                              child: IconButton(
-                                  icon: Icon(
-                                    Icons.camera_alt,
-                                    size: 40.0,
-                                  ),
-                                  onPressed: () {
-                                    getImageUrl();
-                                  }),
-                            )
-                          : Container()
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.fromLTRB(120.0, 15.0, 0.0, 0.0),
-                        child: Text(
-                          "${widget.stylistName}",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0,
-                          ),
-                        ),
-                      ),
-                      isLoginStylist || loginStylist()
-                          ? Container(
-                              child: IconButton(
-                                icon: Icon(Icons.edit),
-                                onPressed: () {
-                                  dialogName();
-                                },
-                              ),
-                            )
-                          : Container()
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.fromLTRB(75.0, 5.0, 0.0, 0.0),
-                        child: Text(
-                          "${widget.stylistPhone} | ${widget.stylistAddress}",
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                      ),
-                      isLoginStylist || loginStylist()
-                          ? Container(
-                              child: IconButton(
-                                icon: Icon(Icons.edit),
-                                onPressed: () {
-                                  dialogContact();
-                                },
-                              ),
-                            )
-                          : Container()
-                    ],
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      buttonWork(),
-                      buttonBook(),
-                    ],
-                  ),
-                  Container(
-                    height: 17.0,
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 0.0),
-                        child: isLoginStylist || loginStylist()
-                            ? Text(
-                                "About me",
-                                style: TextStyle(
-                                    fontSize: 22.0,
-                                    fontWeight: FontWeight.bold),
-                              )
-                            : Text(
-                                "About stylist",
-                                style: TextStyle(
-                                    fontSize: 22.0,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                      ),
-                      isLoginStylist || loginStylist()
-                          ? Container(
-                              child: IconButton(
-                                icon: Icon(Icons.edit),
-                                onPressed: () {
-                                  aboutDialog();
-                                },
-                              ),
-                            )
-                          : Container()
-                    ],
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(20.0, 10.0, 12.0, 0.0),
-                    width: 150.0,
-//                    height: 100.0,
-                    child: Text(
-                      widget.about,
-                      style: TextStyle(
-                        fontSize: 17.0,
                       ),
                     ),
                   ),
                   isLoginStylist || loginStylist()
-                      ? Container()
-                      : Card(
-                          child: Container(
-                            margin: EdgeInsets.all(15.0),
-                            child: Form(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Container(
-                                    height: 15.0,
-                                  ),
-                                  Container(
-                                    child: Text(
-                                      "Rate this stylist",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 22.0),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.all(10.0),
-                                    child: RatingBar(
-                                      onRatingChanged: (rating) =>
-                                          setState(() => _ratingHeart = rating),
-                                      filledIcon: Icons.star,
-                                      emptyIcon: Icons.star_border,
-                                      halfFilledIcon: Icons.star_half,
-                                      isHalfAllowed: true,
-                                      filledColor: Colors.purple,
-                                      emptyColor: Colors.purple,
-                                      halfFilledColor: Colors.purple,
-                                      size: 30,
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Text(
-                                      " Rating: $_ratingHeart",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 10.0,
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.all(8.0),
-                                    width: 100.0,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.grey,
-                                          width: 1.0,
-                                          style: BorderStyle.solid),
-                                    ),
-                                    child: notSubmitted
-                                        ? FlatButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                count = count + 1.0;
-                                              });
-                                              if (_ratingHeart > 0.0 &&
-                                                  notSubmitted) {
-                                                setState(() {
-                                                  rating = summedRating +
-                                                      _ratingHeart;
-                                                  summedRating = summedRating +
-                                                      _ratingHeart;
-                                                  average =
-                                                      summedRating / count;
-                                                });
-                                                updateRating();
-                                              }
-                                              setState(() {
-                                                notSubmitted = false;
-                                              });
-                                            },
-                                            child: Text(
-                                              "SUBMIT",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14.0),
-                                            ),
-                                          )
-                                        : Container(
-                                            padding: EdgeInsets.all(10.0),
-                                            child: Center(
-                                                child: Text("Thank you")),
-                                          ),
-                                  ),
-                                ],
-                              ),
+                      ? Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: IconButton(
+                        icon: Icon(
+                          Icons.camera_alt,
+                          size: 40.0,
+                        ),
+                        onPressed: () {
+                          getImageUrl();
+                        }),
+                  )
+                      : Container()
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.fromLTRB(120.0, 15.0, 0.0, 0.0),
+                    child: Text(
+                      "${widget.stylistName}",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  ),
+                  isLoginStylist || loginStylist()
+                      ? Container(
+                    child: IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        dialogName();
+                      },
+                    ),
+                  )
+                      : Container()
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.fromLTRB(75.0, 5.0, 0.0, 0.0),
+                    child: Text(
+                      "${widget.stylistPhone} | ${widget.stylistAddress}",
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                  ),
+                  isLoginStylist || loginStylist()
+                      ? Container(
+                    child: IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        dialogContact();
+                      },
+                    ),
+                  )
+                      : Container()
+                ],
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  buttonWork(),
+                  buttonBook(),
+                ],
+              ),
+              Container(
+                height: 17.0,
+              ),
+              Row(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 0.0),
+                    child: isLoginStylist || loginStylist()
+                        ? Text(
+                      "About me",
+                      style: TextStyle(
+                          fontSize: 22.0,
+                          fontWeight: FontWeight.bold),
+                    )
+                        : Text(
+                      "About stylist",
+                      style: TextStyle(
+                          fontSize: 22.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  isLoginStylist || loginStylist()
+                      ? Container(
+                    child: IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        aboutDialog();
+                      },
+                    ),
+                  )
+                      : Container()
+                ],
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(20.0, 10.0, 12.0, 0.0),
+                width: 150.0,
+//                    height: 100.0,
+                child: Text(
+                  widget.about,
+                  style: TextStyle(
+                    fontSize: 17.0,
+                  ),
+                ),
+              ),
+              isLoginStylist || loginStylist()
+                  ? Container()
+                  : Card(
+                child: Container(
+                  margin: EdgeInsets.all(15.0),
+                  child: Form(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          height: 15.0,
+                        ),
+                        Container(
+                          child: Text(
+                            "Rate this stylist",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22.0),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(10.0),
+                          child: RatingBar(
+                            onRatingChanged: (rating) =>
+                                setState(() => _ratingHeart = rating),
+                            filledIcon: Icons.star,
+                            emptyIcon: Icons.star_border,
+                            halfFilledIcon: Icons.star_half,
+                            isHalfAllowed: true,
+                            filledColor: Colors.purple,
+                            emptyColor: Colors.purple,
+                            halfFilledColor: Colors.purple,
+                            size: 30,
+                          ),
+                        ),
+                        Container(
+                          child: Text(
+                            " Rating: $_ratingHeart",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                ],
+                        Container(
+                          height: 10.0,
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(8.0),
+                          width: 100.0,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Colors.grey,
+                                width: 1.0,
+                                style: BorderStyle.solid),
+                          ),
+                          child: notSubmitted
+                              ? FlatButton(
+                            onPressed: () {
+                              setState(() {
+                                count = count + 1.0;
+                              });
+                              if (_ratingHeart > 0.0 &&
+                                  notSubmitted) {
+                                setState(() {
+                                  rating = summedRating +
+                                      _ratingHeart;
+                                  summedRating = summedRating +
+                                      _ratingHeart;
+                                  average =
+                                      summedRating / count;
+                                });
+                                updateRating();
+                              }
+                              setState(() {
+                                notSubmitted = false;
+                              });
+                            },
+                            child: Text(
+                              "SUBMIT",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.0),
+                            ),
+                          )
+                              : Container(
+                            padding: EdgeInsets.all(10.0),
+                            child: Center(
+                                child: Text("Thank you")),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
+          ),
+        ),
       ),
     );
   }
